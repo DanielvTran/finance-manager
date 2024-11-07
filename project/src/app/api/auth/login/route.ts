@@ -1,20 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { loginUserSchema } from "../../../../../lib/validationSchema";
 import prisma from "../../../../../lib/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-const createUserSchema = z.object({
-  email: z.string().email("Invalid email").trim().max(255),
-  password: z.string().min(8, "Password must be at least 8 characters").max(255),
-});
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
     // Check for body validation
-    const validation = createUserSchema.safeParse(body);
+    const validation = loginUserSchema.safeParse(body);
 
     if (!validation.success) {
       return NextResponse.json(validation.error.errors, { status: 400 });

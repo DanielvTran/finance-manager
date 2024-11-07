@@ -1,3 +1,4 @@
+// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import jwt from "jsonwebtoken";
@@ -5,6 +6,7 @@ import jwt from "jsonwebtoken";
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
 
+  // Redirect to login if no token is found
   if (!token) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
@@ -17,13 +19,7 @@ export async function middleware(request: NextRequest) {
   }
 }
 
+// Configure middleware to protect specific routes
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/income/:path*",
-    "/expense/:path*",
-    "/settings/:path*",
-    "/category/:path*",
-    "/budget/:path*",
-  ],
+  matcher: ["/dashboard/:path*"],
 };
