@@ -1,145 +1,193 @@
-# Project Roadmap: Personal Finance Manager
+# Milestone Plan for Personal Finance Manager
 
-## Project Overview
-The Personal Finance Manager application allows users to manage their finances, track income and expenses, set budgets, and generate reports. This project will be developed using C# for the application logic and MySQL for data storage.
+### Tools and Frameworks
 
----
-
-## Project Milestones
-
-### Milestone 1: Project Setup and Planning
-- [ ] **Define Project Scope and Requirements**
-  - [ ] Define user stories and main features (Authentication, Income/Expense Tracking, Budgeting, Reports).
-  - [ ] Outline the application's functionalities and UI elements.
-  
-- [ ] **Set Up Development Environment**
-  - [ ] Install **Visual Studio** for C# development.
-  - [ ] Set up **MySQL** and install a MySQL management tool (e.g., MySQL Workbench).
-  
-- [ ] **Initialize Git Repository**
-  - [ ] Create a Git repository for version control.
-  - [ ] Set up a `.gitignore` file to exclude unnecessary files.
+- **Frontend**: Next.js (with API routes for backend functionality)
+- **Styling**: Tailwind CSS
+- **UI Library**: DaisyUI
+- **Database**: MySQL (designed in MySQL Workbench)
 
 ---
 
-### Milestone 2: Database Design and Setup
-- [ ] **Database Schema Design**
-  - [ ] Define tables: `Users`, `Transactions`, `Categories`, `Budgets`.
-  - [ ] Design relationships between tables:
-    - [ ] `Users` - one-to-many relationship with `Transactions`.
-    - [ ] `Categories` - many-to-one relationship with `Transactions`.
-    - [ ] `Budgets` - one-to-one or one-to-many with `Users` and `Categories`.
-  
-- [ ] **Database Implementation**
-  - [ ] Create a new MySQL database and define the schema.
-  - [ ] Set up primary keys, foreign keys, and indices.
-  - [ ] Insert sample data for development and testing.
+## Milestone 1: Project Setup and Basic Structure
+
+**Goal**: Set up the core structure of the project to provide a solid foundation for further development.
+
+- [x] **Initialize Project with Next.js**
+
+  - [x] Set up a new Next.js project.
+  - [x] Install necessary packages: Tailwind CSS, DaisyUI, Axios, MySQL.
+
+- [x] **Set Up Tailwind CSS**
+
+  - [x] Configure Tailwind CSS and integrate it with Next.js.
+  - [] Set up custom colors and fonts if needed.
+
+- [x] **Configure Database Connection**
+
+  - [x] Install `mysql2` package for connecting to MySQL.
+  - [x] Install `prisma` for handling ORM
+  - [x] Create a `.env` file and set up environment variables for MySQL connection (database URL, username, password).
+
+- [x] **Set Up Basic Folder Structure**
+
+  - [x] Create folders for `components`, `pages`, `api`.
+
+- [x] **Git Initialization**
+  - [x] Initialize a Git repository, add a `.gitignore` file, and make the initial commit.
+
+---
+
+## Milestone 2: Database Design and Implementation (Days 1-2)
+
+**Goal**: Design the database schema in MySQL Workbench and set up the database.
+
+- [x] **Define Database Schema**
+
+  - [x] Use MySQL Workbench to create tables: `Users`, `Transactions`, `Categories`, and `Budgets`.
+
+- [x] **Database Relationships**
+
+  - [x] `Users` table with a one-to-many relationship to `Transactions`.
+  - [x] `Categories` with a many-to-one relationship to `Transactions`.
+  - [x] `Budgets` with one-to-one or one-to-many relationships with `Users` and `Categories`.
+
+- [x] **Implement Database Migrations**
+
+  - [x] Use `Prisma` ORM (optional) to handle migrations and database interactions, or write SQL scripts for setting up the database tables.
 
 - [ ] **Test Database Connectivity**
-  - [ ] Test connections from your C# application to MySQL.
+  - [ ] Create a simple Next.js API route (`api/test`) to test connectivity with the database.
 
 ---
 
-### Milestone 3: User Authentication Module
-- [ ] **User Registration**
-  - [ ] Implement registration functionality with hashed password storage.
-  - [ ] Use input validation to prevent SQL injection and handle errors.
+## Milestone 3: User Authentication (Days 3-4)
 
-- [ ] **User Login**
-  - [ ] Implement login functionality with password verification.
-  - [ ] Set up session handling for tracking logged-in users.
+**Goal**: Implement user authentication and secure access to the application.
 
-- [ ] **Secure User Authentication**
-  - [ ] Implement password hashing using a C# library like `BCrypt.Net`.
-  - [ ] Ensure secure handling of user sessions.
+- [ ] **Set Up Registration Endpoint**
 
----
+  - [ ] Create an API route (`api/auth/register`) that accepts a username, email, and password.
+  - [ ] Hash passwords using `bcrypt` and store them securely in the database.
 
-### Milestone 4: Income and Expense Tracking
-- [ ] **Transaction Module Design**
-  - [ ] Define models for `Transaction` and `Category`.
-  - [ ] Define UI forms for adding, editing, and deleting transactions.
-  
-- [ ] **Transaction CRUD Operations**
-  - [ ] Implement Create, Read, Update, and Delete (CRUD) operations for transactions.
-  - [ ] Use SQL queries or an ORM (e.g., Entity Framework or Dapper) for database interaction.
+- [ ] **Login Endpoint**
 
-- [ ] **Category Management**
-  - [ ] Create functionality for adding and managing categories.
-  - [ ] Link transactions with categories for better organization.
+  - [ ] Create a `login` API route (`api/auth/login`) to validate user credentials.
+  - [ ] Return a JSON Web Token (JWT) upon successful login to maintain session.
 
-- [ ] **Validation and Error Handling**
-  - [ ] Add validation for form inputs (e.g., positive numbers for income/expenses).
-  - [ ] Implement error handling for invalid inputs or database errors.
+- [ ] **Protect Routes and Implement JWT Middleware**
+  - [ ] Create a middleware function to protect certain API routes and frontend pages.
+  - [ ] Store the JWT in cookies or local storage, as appropriate.
 
 ---
 
-### Milestone 5: Budgeting Module
-- [ ] **Budget Setup and Tracking**
-  - [ ] Define budget constraints by category and/or monthly total.
-  - [ ] Allow users to set budgets for different categories.
+## Milestone 4: Income and Expense Tracking (Days 5-6)
 
-- [ ] **Budget Calculations**
-  - [ ] Calculate remaining budget per category based on income and expenses.
-  - [ ] Display budget progress for each category and highlight categories that exceed budget.
+**Goal**: Implement core features for adding, viewing, editing, and deleting transactions.
 
-- [ ] **Budget Alerts**
-  - [ ] Implement optional alerts when expenses approach or exceed the budget.
+- [ ] **API Endpoints for Transactions**
+
+  - [ ] Set up CRUD API routes for transactions (`api/transactions`).
+  - [ ] Define endpoints for creating, reading, updating, and deleting transactions.
+
+- [ ] **Create Transaction Page**
+
+  - [ ] Build a form with fields for date, category, amount, and type (income or expense).
+  - [ ] Use a dropdown to select the category and radio buttons to choose between income and expense.
+
+- [ ] **Transaction List Component**
+  - [ ] Create a component that displays a list of all transactions, showing details like date, amount, category, and type.
+  - [ ] Add edit and delete buttons next to each transaction.
 
 ---
 
-### Milestone 6: Reporting and Data Visualization
-- [ ] **Monthly and Yearly Reports**
-  - [ ] Create functionality for generating monthly and yearly financial summaries.
-  - [ ] Calculate totals for income, expenses, and budget usage.
+## Milestone 5: Budgeting Module (Days 7-8)
+
+**Goal**: Implement budget setting and tracking functionality.
+
+- [ ] **API Endpoints for Budgets**
+
+  - [ ] Create API routes for setting, updating, and retrieving budget information.
+
+- [ ] **Set Budget UI**
+
+  - [ ] Create a form for users to set budgets for specific categories (e.g., food, transportation).
+  - [ ] Allow users to enter a monthly or weekly budget amount for each category.
+
+- [ ] **Display Budget Progress**
+  - [ ] Create a dashboard component to show the budget usage per category.
+  - [ ] Highlight categories that have exceeded the budget in red or another warning color.
+
+---
+
+## Milestone 6: Financial Summary and Reporting (Days 9-10)
+
+**Goal**: Provide users with a summary and data visualization tools.
+
+- [ ] **Monthly and Yearly Summary**
+
+  - [ ] Implement API routes to fetch monthly and yearly summaries of income and expenses.
+
+- [ ] **Create Summary Page**
+
+  - [ ] Build a summary page displaying total income and expenses for the selected time period (e.g., monthly, yearly).
+  - [ ] Use charts to show income vs. expenses over time.
 
 - [ ] **Data Visualization**
-  - [ ] Use chart libraries to display income vs. expense comparisons.
-  - [ ] Include bar charts, pie charts, or line graphs for visual representation.
-  
+
+  - [ ] Integrate Chart.js or a Svelte-compatible chart library to display bar charts or pie charts.
+  - [ ] Visualize data for better understanding of spending patterns and budget usage.
+
 - [ ] **Export Reports**
-  - [ ] Allow users to export reports as PDF or CSV files for offline use.
+  - [ ] Implement a feature to export the financial data in CSV or PDF format.
 
 ---
 
-### Milestone 7: Additional Features (Optional)
+## Milestone 7: Optional Features (Days 11-12)
+
+**Goal**: Add additional features to enhance user experience.
+
 - [ ] **Recurring Transactions**
-  - [ ] Allow users to add recurring income or expenses (e.g., monthly rent, subscriptions).
-  
-- [ ] **Multi-User Functionality**
-  - [ ] Add functionality for family or shared budgeting by enabling multiple users.
+
+  - [ ] Add a feature to set up recurring transactions for regular income or expenses (e.g., monthly rent, salary).
+  - [ ] Create a job or logic to auto-generate recurring transactions.
 
 - [ ] **Notifications**
-  - [ ] Implement notifications or alerts for low balances, budgets exceeded, or upcoming bills.
+  - [ ] Implement notifications or alerts when users are close to reaching their budget limit.
+  - [ ] Use toast messages or modal dialogs to display these alerts.
 
 ---
 
-### Milestone 8: Finalization and Deployment
-- [ ] **Application Testing**
-  - [ ] Perform end-to-end testing to ensure all modules work together seamlessly.
-  - [ ] Conduct usability testing to refine the user interface and experience.
-  
+## Milestone 8: Finalization and Deployment (Days 13-14)
+
+**Goal**: Test, document, and deploy the application.
+
+- [ ] **Testing**
+
+  - [ ] Conduct end-to-end testing to ensure all features work as expected.
+  - [ ] Test for usability, performance, and security.
+
 - [ ] **Documentation**
-  - [ ] Document code, database schema, and key application functionalities.
-  - [ ] Write a user manual with instructions for setup, use, and troubleshooting.
+
+  - [ ] Document the codebase, API routes, database schema, and key application functionalities.
+  - [ ] Write a user guide or README for setup, usage, and troubleshooting.
 
 - [ ] **Deployment**
-  - [ ] For desktop: Package the application for distribution.
-  - [ ] For web: Deploy on a cloud platform (optional if building as a web app).
+  - [ ] Deploy the application using Vercel for Next.js frontend/backend API.
+  - [ ] Configure environment variables and database connection on the deployed environment.
+  - [ ] Optionally, set up automated CI/CD if needed.
 
 ---
 
-## Additional Notes
-- **Version Control**: Use Git branches for each milestone or feature to keep code organized.
-- **Code Structure**: Follow C# best practices for organizing classes and methods.
-- **Database Backup**: Regularly back up the MySQL database during development.
+## Summary of Milestones and Timeline
 
-## Resources
-- **C# Documentation**: [docs.microsoft.com](https://docs.microsoft.com/en-us/dotnet/csharp/)
-- **MySQL Documentation**: [dev.mysql.com](https://dev.mysql.com/doc/)
-- **Charting Library**: Consider using [LiveCharts](https://lvcharts.net/) for WPF.
+1. **Milestone 1 (Day 1)**: Project setup and structure.
+2. **Milestone 2 (Days 1-2)**: Database design and setup.
+3. **Milestone 3 (Days 3-4)**: User authentication.
+4. **Milestone 4 (Days 5-6)**: Income and expense tracking.
+5. **Milestone 5 (Days 7-8)**: Budgeting module.
+6. **Milestone 6 (Days 9-10)**: Financial summary and data visualization.
+7. **Milestone 7 (Days 11-12)**: Optional features (recurring transactions and notifications).
+8. **Milestone 8 (Days 13-14)**: Finalization, testing, documentation, and deployment.
 
 ---
-
-## Conclusion
-Following this roadmap will help you develop a functional, polished Personal Finance Manager application and strengthen your skills in C# and MySQL. Good luck!

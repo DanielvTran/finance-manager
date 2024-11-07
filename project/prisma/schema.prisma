@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Models 
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  password     String
+  transactions Transaction[]
+  budgets      Budget[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Category {
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  transactions Transaction[]
+  budgets      Budget[]
+}
+
+model Transaction {
+  id         Int             @id @default(autoincrement())
+  amount     Float
+  date       DateTime        @default(now())
+  type       TransactionType
+  userId     Int
+  categoryId Int
+  User       User            @relation(fields: [userId], references: [id])
+  Category   Category        @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime        @default(now())
+}
+
+model Budget {
+  id         Int      @id @default(autoincrement())
+  amount     Float
+  startDate  DateTime
+  endDate    DateTime
+  userId     Int
+  categoryId Int
+  User       User     @relation(fields: [userId], references: [id])
+  Category   Category @relation(fields: [categoryId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+// Enum for transaction types (income or expense)
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
