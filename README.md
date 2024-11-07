@@ -56,8 +56,8 @@
 
   - [x] Use `Prisma` ORM (optional) to handle migrations and database interactions, or write SQL scripts for setting up the database tables.
 
-- [ ] **Test Database Connectivity**
-  - [ ] Create a simple Next.js API route (`api/test`) to test connectivity with the database.
+- [x] **Test Database Connectivity**
+  - [x] Create a simple Next.js API route (`api/test`) to test connectivity with the database.
 
 ---
 
@@ -65,15 +65,15 @@
 
 **Goal**: Implement user authentication and secure access to the application.
 
-- [ ] **Set Up Registration Endpoint**
+- [x] **Set Up Registration Endpoint**
 
-  - [ ] Create an API route (`api/auth/register`) that accepts a username, email, and password.
-  - [ ] Hash passwords using `bcrypt` and store them securely in the database.
+  - [x] Create an API route (`api/auth/signup`) that accepts a email, and password.
+  - [x] Hash passwords using `bcrypt` and store them securely in the database.
 
-- [ ] **Login Endpoint**
+- [x] **Login Endpoint**
 
-  - [ ] Create a `login` API route (`api/auth/login`) to validate user credentials.
-  - [ ] Return a JSON Web Token (JWT) upon successful login to maintain session.
+  - [x] Create a `login` API route (`api/auth/login`) to validate user credentials.
+  - [x] Return a JSON Web Token (JWT) upon successful login to maintain session.
 
 - [ ] **Protect Routes and Implement JWT Middleware**
   - [ ] Create a middleware function to protect certain API routes and frontend pages.
