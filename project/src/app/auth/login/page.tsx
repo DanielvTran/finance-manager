@@ -85,9 +85,13 @@ export default function Login() {
             </a>
           </p>
 
-          <p className="bg-[#F2F2F2] text-center font-bold rounded-xl py-3 text-[#E57373] border-2 border-[#E57373]">
-            {errorMessage}
-          </p>
+          {errorMessage ? (
+            <p className="bg-[#F2F2F2] text-center font-bold rounded-xl py-3 text-[#E57373] border-2 border-[#E57373]">
+              {errorMessage}
+            </p>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </div>

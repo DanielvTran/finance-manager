@@ -75,9 +75,9 @@
   - [x] Create a `login` API route (`api/auth/login`) to validate user credentials.
   - [x] Return a JSON Web Token (JWT) upon successful login to maintain session.
 
-- [ ] **Protect Routes and Implement JWT Middleware**
-  - [ ] Create a middleware function to protect certain API routes and frontend pages.
-  - [ ] Store the JWT in cookies or local storage, as appropriate.
+- [x] **Protect Routes and Implement JWT Middleware**
+  - [x] Create a middleware function to protect certain API routes and frontend pages.
+  - [x] Store the JWT in cookies or local storage, as appropriate.
 
 ---
 

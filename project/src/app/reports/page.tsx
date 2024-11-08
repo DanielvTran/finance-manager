@@ -1,14 +1,10 @@
 "use client";
 
-import { useUser } from "@/contexts/UserContext";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Graph from "@/components/Graph";
 
-export default function Dashboard() {
+export default function Budgeting() {
   const pathname = usePathname();
-
-  const { user, loading, error } = useUser();
 
   const links = [
     { href: "/income", label: "Income" },
@@ -32,7 +28,7 @@ export default function Dashboard() {
                 href={link.href}
                 className={`text-xl md:text-2xl lg:text-3xl block transition ${
                   pathname === link.href
-                    ? "text-[#98FF98] border-l-4 border-[#98FF98] pl-2"
+                    ? "text-[#98FF98] border-r-4 border-[#98FF98] pr-2" // Active styles
                     : "text-[#DFFFE2] hover:text-[#98FF98]"
                 }`}
               >
@@ -45,25 +41,8 @@ export default function Dashboard() {
 
       <div className="right-container w-full lg:w-4/5 bg-[#F2F2F2] flex min-h-screen py-20 px-20">
         <div className="max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-2xl 3xl:max-w-3xl">
-          <h1 className="text-[#323E42] font-bold text-3xl lg:text-4xl text-left mb-10">
-            Welcome back, {user?.firstName}
-          </h1>
-          <div className="reports-container grid grid-cols-3 grid-rows-2 gap-4">
-            {/* Top Left - Income */}
-            <div className="transaction-container col-span-2">
-              <Graph title="Income" description="Graph" />
-            </div>
-
-            {/* Bottom Left - Expense */}
-            <div className="transaction-container col-span-2">
-              <Graph title="Expense" description="Graph" />
-            </div>
-
-            {/* Right - Budget spanning both rows */}
-            <div className="budget-container col-span-1 row-span-2">
-              <Graph title="Budget" description="Graph" />
-            </div>
-          </div>
+          <h1 className="text-[#323E42] font-bold text-3xl lg:text-4xl text-left mb-10">Reports</h1>
+          <div className="reports-container grid grid-cols-3 grid-rows-2 gap-4">Content</div>
         </div>
       </div>
     </div>
