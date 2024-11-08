@@ -2,6 +2,10 @@
 
 import Image from "next/image";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginUserSchema } from "../../../../lib/validationSchema";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface IUserForm {
   email: string;
@@ -9,9 +13,26 @@ interface IUserForm {
 }
 
 export default function Login() {
-  const { register, handleSubmit } = useForm<IUserForm>();
+  const router = useRouter();
 
-  const onSubmit: SubmitHandler<IUserForm> = (data) => console.log(data);
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<IUserForm>({
+    resolver: zodResolver(loginUserSchema),
+  });
+
+  const onSubmit: SubmitHandler<IUserForm> = async (data) => {
+    try {
+      const response = await axios.post("/api/auth/login", data);
+      console.log("Login successful:", response.data);
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Login error:", error);
+      // Handle error (e.g., show error message to the user)
+    }
+  };
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
@@ -27,19 +48,23 @@ export default function Login() {
           <form onSubmit={handleSubmit(onSubmit)} className="bg-[#323E42] space-y-4 rounded-lg mb-5">
             <input
               {...register("email")}
-              placeholder="Email"
-              className="w-full px-5 py-5 rounded-xl bg-[#DFFFE2] font-bold text-[#3A6F66] placeholder:text-[#3A6F66] border border-gray-300
-             focus:outline-none focus:border-[#98FF98] focus:ring-2 focus:ring-[#98FF98] 
-             hover:border-[#98FF98] hover:shadow-sm transition-all duration-200"
+              placeholder={errors.email ? errors.email.message : "Email"}
+              className={`w-full px-5 py-5 rounded-xl bg-[#DFFFE2] font-bold text-[#3A6F66] border ${
+                errors.email
+                  ? "border-[#E57373] border-2 placeholder:font-bold placeholder:text-[#E57373]"
+                  : "border-gray-300 placeholder:text-[#3A6F66]"
+              } focus:outline-none focus:border-[#98FF98] focus:ring-2 focus:ring-[#98FF98] hover:border-[#98FF98] hover:shadow-sm transition-all duration-200`}
             />
 
             <input
               {...register("password")}
-              placeholder="Password"
+              placeholder={errors.password ? errors.password.message : "Password"}
               type="password"
-              className="w-full px-5 py-5 rounded-xl bg-[#DFFFE2] font-bold text-[#3A6F66] placeholder:text-[#3A6F66] border border-gray-300
-              focus:outline-none focus:border-[#98FF98] focus:ring-2 focus:ring-[#98FF98] 
-              hover:border-[#98FF98] hover:shadow-sm transition-all duration-200"
+              className={`w-full px-5 py-5 rounded-xl bg-[#DFFFE2] font-bold text-[#3A6F66] border ${
+                errors.password
+                  ? "border-[#E57373] border-2 placeholder:font-bold placeholder:text-[#E57373]"
+                  : "border-gray-300 placeholder:text-[#3A6F66]"
+              } focus:outline-none focus:border-[#98FF98] focus:ring-2 focus:ring-[#98FF98] hover:border-[#98FF98] hover:shadow-sm transition-all duration-200`}
             />
 
             <button
