@@ -31,11 +31,11 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
-    "/income/:path*",
-    "/expense/:path*",
-    "/budgeting/:path*",
-    "/categories/:path*",
-    "/reports/:path*",
-    "/settings/:path*",
+    "/pages/income/:path*",
+    "/pages/expense/:path*",
+    "/pages/budgeting/:path*",
+    "/pages/categories/:path*",
+    "/pages/reports/:path*",
+    "/pages/settings/:path*",
   ],
 };

@@ -1,23 +1,12 @@
 "use client";
 
-import { useUser } from "@/contexts/UserContext";
+import { links } from "../../../../lib";
+
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Graph from "@/components/Graph";
 
 export default function Income() {
   const pathname = usePathname();
-
-  const { user, loading, error } = useUser();
-
-  const links = [
-    { href: "/income", label: "Income" },
-    { href: "/expense", label: "Expense" },
-    { href: "/budgeting", label: "Budgeting" },
-    { href: "/categories", label: "Categories" },
-    { href: "/reports", label: "Reports" },
-    { href: "/settings", label: "Settings" },
-  ];
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
