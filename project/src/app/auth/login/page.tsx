@@ -6,8 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginUserSchema } from "../../../../lib/validationSchema";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-interface IUserForm {
+interface IUserLoginForm {
   email: string;
   password: string;
 }
@@ -15,22 +16,24 @@ interface IUserForm {
 export default function Login() {
   const router = useRouter();
 
+  const [errorMessage, setErrorMessage] = useState("");
+
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<IUserForm>({
+  } = useForm<IUserLoginForm>({
     resolver: zodResolver(loginUserSchema),
   });
 
-  const onSubmit: SubmitHandler<IUserForm> = async (data) => {
+  const onSubmit: SubmitHandler<IUserLoginForm> = async (data) => {
     try {
       const response = await axios.post("/api/auth/login", data);
       console.log("Login successful:", response.data);
       router.push("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
-      // Handle error (e.g., show error message to the user)
+      setErrorMessage("Incorrect credentials");
     }
   };
 
@@ -75,11 +78,15 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="text-sm md:text-base text-[#F2F2F2]">
+          <p className="text-sm md:text-base text-[#F2F2F2] mb-5">
             New to MintyPlan?{" "}
             <a href="/auth/signup" className="text-[#F2F2F2] hover:text-[#98FF98] underline">
               Create account
             </a>
+          </p>
+
+          <p className="bg-[#F2F2F2] text-center font-bold rounded-xl py-3 text-[#E57373] border-2 border-[#E57373]">
+            {errorMessage}
           </p>
         </div>
       </div>
