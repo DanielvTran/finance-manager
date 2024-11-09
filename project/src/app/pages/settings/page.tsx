@@ -57,6 +57,7 @@ export default function Budgeting() {
     try {
       const response = await axios.post("/api/user/update-user", data);
       console.log("Update successful:", response.data);
+      setIsEditable(false);
     } catch (error) {
       console.error("Update error:", error);
       setErrorMessage("Incorrect credentials");
