@@ -1,11 +1,67 @@
 "use client";
 
 import { links } from "../../../../lib";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { updateUserSchema } from "../../../../lib/validationSchema";
+import { useState } from "react";
+import axios from "axios";
+import { useUser } from "@/contexts/UserContext";
+
+interface IUserSettingsForm {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
 
 export default function Budgeting() {
+  const router = useRouter();
   const pathname = usePathname();
+  const { user, loading, error } = useUser();
+  const [isEditable, setIsEditable] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  console.log(user);
+
+  const {
+    register,
+    setValue,
+    getValues,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<IUserSettingsForm>({
+    resolver: zodResolver(updateUserSchema),
+    defaultValues: {
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      email: user?.email,
+      password: user?.password,
+    },
+  });
+
+  // Function to toggle edit mode
+  const handleEditClick = () => {
+    setIsEditable((prev) => !prev);
+    if (!isEditable) {
+      setValue("firstName", getValues("firstName"));
+      setValue("lastName", getValues("lastName"));
+      setValue("email", getValues("email"));
+      setValue("password", getValues("password"));
+    }
+  };
+
+  const onSubmit: SubmitHandler<IUserSettingsForm> = async (data) => {
+    try {
+      const response = await axios.post("/api/user/update-user", data);
+      console.log("Update successful:", response.data);
+    } catch (error) {
+      console.error("Update error:", error);
+      setErrorMessage("Incorrect credentials");
+    }
+  };
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
@@ -20,7 +76,7 @@ export default function Budgeting() {
                 href={link.href}
                 className={`text-xl md:text-2xl lg:text-3xl block transition ${
                   pathname === link.href
-                    ? "text-[#98FF98] border-r-4 border-[#98FF98] pr-2" // Active styles
+                    ? "text-[#98FF98] border-r-4 border-[#98FF98] pr-2"
                     : "text-[#DFFFE2] hover:text-[#98FF98]"
                 }`}
               >
@@ -33,8 +89,123 @@ export default function Budgeting() {
 
       <div className="right-container w-full lg:w-4/5 bg-[#F2F2F2] flex min-h-screen py-20 px-20">
         <div className="max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-2xl 3xl:max-w-3xl">
-          <h1 className="text-[#323E42] font-bold text-3xl lg:text-4xl text-left mb-10">Settings</h1>
-          <div className="reports-container grid grid-cols-3 grid-rows-2 gap-4">Content</div>
+          <h1 className="text-[#323E42] font-bold text-3xl lg:text-4xl text-left mb-10">Profile</h1>
+          <div className="reports-container grid grid-cols-3 grid-rows-2 gap-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="bg-[#F2F2F2] space-y-4 rounded-lg mb-5">
+              {/* First Name Input */}
+              <div
+                className={`flex w-fit items-center bg-[#ffffff] rounded-xl border transition-all duration-200 ${
+                  errors.firstName ? "border-[#E57373] border-2" : isEditable ? "border-[#E5B973]" : "border-gray-300"
+                } `}
+              >
+                <input
+                  {...register("firstName")}
+                  readOnly={!isEditable}
+                  placeholder={errors.firstName ? errors.firstName.message : "First Name"}
+                  type="text"
+                  className={`w-fit pl-5 py-5 rounded-xl bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
+                    errors.firstName ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
+                  } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
+                />
+                <span
+                  className={`material-symbols-outlined pr-5 cursor-pointer transition-colors ${
+                    isEditable ? "text-[#E5B973]" : "text-[#D9D9D9]"
+                  }`}
+                  onClick={handleEditClick}
+                >
+                  more_vert
+                </span>
+              </div>
+
+              {/* Last Name Input */}
+              <div
+                className={`flex w-fit items-center bg-[#ffffff] rounded-xl border transition-all duration-200 ${
+                  errors.lastName ? "border-[#E57373] border-2" : isEditable ? "border-[#E5B973]" : "border-gray-300"
+                } `}
+              >
+                <input
+                  {...register("lastName")}
+                  readOnly={!isEditable}
+                  placeholder={errors.lastName ? errors.lastName.message : "Last Name"}
+                  type="text"
+                  className={`w-fit pl-5 py-5 rounded-xl bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
+                    errors.lastName ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
+                  } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
+                />
+                <span
+                  className={`material-symbols-outlined pr-5 cursor-pointer transition-colors ${
+                    isEditable ? "text-[#E5B973]" : "text-[#D9D9D9]"
+                  }`}
+                  onClick={handleEditClick}
+                >
+                  more_vert
+                </span>
+              </div>
+
+              {/* Email Input */}
+              <div
+                className={`flex w-fit items-center bg-[#ffffff] rounded-xl border transition-all duration-200 ${
+                  errors.email ? "border-[#E57373] border-2" : isEditable ? "border-[#E5B973]" : "border-gray-300"
+                } `}
+              >
+                <input
+                  {...register("email")}
+                  readOnly={!isEditable}
+                  placeholder={errors.email ? errors.email.message : "Email"}
+                  type="text"
+                  className={`w-fit pl-5 py-5 rounded-xl bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
+                    errors.email ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
+                  } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
+                />
+                <span
+                  className={`material-symbols-outlined pr-5 cursor-pointer transition-colors ${
+                    isEditable ? "text-[#E5B973]" : "text-[#D9D9D9]"
+                  }`}
+                  onClick={handleEditClick}
+                >
+                  more_vert
+                </span>
+              </div>
+
+              {/* Password Input */}
+              <div
+                className={`flex w-fit items-center bg-[#ffffff] rounded-xl border transition-all duration-200 ${
+                  errors.password ? "border-[#E57373] border-2" : isEditable ? "border-[#E5B973]" : "border-gray-300"
+                } `}
+              >
+                <input
+                  {...register("password")}
+                  readOnly={!isEditable}
+                  placeholder={errors.password ? errors.password.message : "Password"}
+                  type="password"
+                  className={`w-fit pl-5 py-5 rounded-xl bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
+                    errors.password ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
+                  } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
+                />
+                <span
+                  className={`material-symbols-outlined pr-5 cursor-pointer transition-colors ${
+                    isEditable ? "text-[#E5B973]" : "text-[#D9D9D9]"
+                  }`}
+                  onClick={handleEditClick}
+                >
+                  more_vert
+                </span>
+              </div>
+
+              <button
+                type="submit"
+                className="text-lg md:text-2xl mb-4 py-2 md:py-3 bg-[#323E42] text-[#98FF98] border-2 border-[#98FF98] rounded-xl w-full text-center font-bold transition-transform transform hover:scale-105 hover:bg-[#3A494D] hover:text-[#B2FFB2] duration-300 ease-in-out"
+              >
+                Update
+              </button>
+            </form>
+
+            {errorMessage && (
+              <p className="bg-[#F2F2F2] text-center font-bold rounded-xl py-3 text-[#E57373] border-2 border-[#E57373]">
+                {errorMessage}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>

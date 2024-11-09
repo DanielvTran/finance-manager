@@ -4,9 +4,9 @@ import prisma from "../../../../../lib/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await req.json();
 
     // Check for body validation
     const validation = loginUserSchema.safeParse(body);
