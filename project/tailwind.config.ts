@@ -20,14 +20,18 @@ const config: Config = {
         secondary: "#98FF98",
       },
       keyframes: {
-        tilt: {
+        hovertilt: {
           "0%, 100%": { transform: "rotate(0deg)" },
           "25%": { transform: "rotate(10deg)" },
           "75%": { transform: "rotate(-10deg)" },
         },
+        tilt: {
+          "0%, 100%": { transform: "rotate(0deg)" },
+        },
       },
       animation: {
-        tilt: "tilt 0.5s ease-in-out infinite",
+        hovertilt: "hovertilt 0.5s ease-in-out infinite",
+        tilt: "hovertilt 0.5s ease-in-out infinite",
       },
     },
   },

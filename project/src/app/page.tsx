@@ -25,7 +25,7 @@ export default function Home() {
         </div>
       </div>
       <div className="right-container w-full lg:w-3/5 bg-[#F2F2F2] flex items-center justify-center min-h-screen">
-        <div className="hover:animate-tilt max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl 3xl:max-w-2xl">
+        <div className="hover:animate-hovertilt max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-xl 3xl:max-w-2xl">
           <Image src="/images/logo.png" alt="Logo" width={300} height={300} className="w-full h-auto" />
         </div>
       </div>

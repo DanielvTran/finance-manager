@@ -30,8 +30,6 @@ export async function middleware(request: NextRequest) {
 // Configure middleware to protect specific routes
 export const config = {
   matcher: [
-    "/auth/login:path*",
-    "/auth/signup:path*",
     "/dashboard/:path*",
     "/pages/income/:path*",
     "/pages/expense/:path*",

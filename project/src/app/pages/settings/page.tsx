@@ -9,22 +9,19 @@ import { updateUserSchema } from "../../../../lib/validationSchema";
 import { useState } from "react";
 import axios from "axios";
 import { useUser } from "@/contexts/UserContext";
+import { IUserSettingsForm } from "../../../../lib/types";
 
-interface IUserSettingsForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
+// Font Awesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEllipsisVertical, faTrash } from "@fortawesome/free-solid-svg-icons";
 
-export default function Budgeting() {
-  const router = useRouter();
+export default function Settings() {
   const pathname = usePathname();
   const { user, loading, error } = useUser();
   const [isEditable, setIsEditable] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  console.log(user);
+  const [deletePrompt, setDeletePrompt] = useState(user?.email);
+  const [deleteUserInput, setDeleteUserInput] = useState("");
 
   const {
     register,
@@ -42,7 +39,6 @@ export default function Budgeting() {
     },
   });
 
-  // Function to toggle edit mode
   const handleEditClick = () => {
     setIsEditable((prev) => !prev);
     if (!isEditable) {
@@ -50,6 +46,14 @@ export default function Budgeting() {
       setValue("lastName", getValues("lastName"));
       setValue("email", getValues("email"));
       setValue("password", getValues("password"));
+    }
+  };
+
+  const handleDeleteClick = () => {
+    if (deleteUserInput === deletePrompt) {
+      alert(`Same: deleteUserInput:${deleteUserInput} deletePrompt:${deletePrompt}`);
+    } else {
+      alert(`Not Same: deleteUserInput:${deleteUserInput} deletePrompt:${deletePrompt}`);
     }
   };
 
@@ -91,7 +95,7 @@ export default function Budgeting() {
       <div className="right-container w-full lg:w-4/5 bg-[#F2F2F2] flex min-h-screen py-20 px-20">
         <div className="max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-2xl 3xl:max-w-3xl">
           <h1 className="text-[#323E42] font-bold text-3xl lg:text-4xl text-left mb-10">Profile</h1>
-          <div className="reports-container grid grid-cols-3 grid-rows-2 gap-4">
+          <div className="reports-container ">
             <form onSubmit={handleSubmit(onSubmit)} className="bg-[#F2F2F2] space-y-4 rounded-lg mb-5">
               {/* First Name Input */}
               <div
@@ -108,14 +112,13 @@ export default function Budgeting() {
                     errors.firstName ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                   } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
                 />
-                <span
-                  className={`material-symbols-outlined pr-5 cursor-pointer transition-colors ${
+                <FontAwesomeIcon
+                  icon={faEllipsisVertical}
+                  className={`pr-5 text-xl cursor-pointer transition-colors ${
                     isEditable ? "text-[#E5B973]" : "text-[#D9D9D9]"
                   }`}
                   onClick={handleEditClick}
-                >
-                  more_vert
-                </span>
+                />
               </div>
 
               {/* Last Name Input */}
@@ -133,14 +136,13 @@ export default function Budgeting() {
                     errors.lastName ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                   } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
                 />
-                <span
-                  className={`material-symbols-outlined pr-5 cursor-pointer transition-colors ${
+                <FontAwesomeIcon
+                  icon={faEllipsisVertical}
+                  className={`pr-5 text-xl cursor-pointer transition-colors ${
                     isEditable ? "text-[#E5B973]" : "text-[#D9D9D9]"
                   }`}
                   onClick={handleEditClick}
-                >
-                  more_vert
-                </span>
+                />
               </div>
 
               {/* Email Input */}
@@ -158,14 +160,13 @@ export default function Budgeting() {
                     errors.email ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                   } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
                 />
-                <span
-                  className={`material-symbols-outlined pr-5 cursor-pointer transition-colors ${
+                <FontAwesomeIcon
+                  icon={faEllipsisVertical}
+                  className={`pr-5 text-xl cursor-pointer transition-colors ${
                     isEditable ? "text-[#E5B973]" : "text-[#D9D9D9]"
                   }`}
                   onClick={handleEditClick}
-                >
-                  more_vert
-                </span>
+                />
               </div>
 
               {/* Password Input */}
@@ -183,22 +184,52 @@ export default function Budgeting() {
                     errors.password ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                   } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
                 />
-                <span
-                  className={`material-symbols-outlined pr-5 cursor-pointer transition-colors ${
+                <FontAwesomeIcon
+                  icon={faEllipsisVertical}
+                  className={`pr-5 text-xl cursor-pointer transition-colors ${
                     isEditable ? "text-[#E5B973]" : "text-[#D9D9D9]"
                   }`}
                   onClick={handleEditClick}
-                >
-                  more_vert
-                </span>
+                />
               </div>
 
-              <button
-                type="submit"
-                className="text-lg md:text-2xl mb-4 py-2 md:py-3 bg-[#323E42] text-[#98FF98] border-2 border-[#98FF98] rounded-xl w-full text-center font-bold transition-transform transform hover:scale-105 hover:bg-[#3A494D] hover:text-[#B2FFB2] duration-300 ease-in-out"
-              >
-                Update
-              </button>
+              <div className="setting-buttons flex w-full justify-between items-center">
+                <button
+                  type="submit"
+                  className="text-lg md:text-2xl py-2 md:py-3 bg-[#323E42] text-[#98FF98] border-2 border-[#98FF98] rounded-xl w-3/5 text-center font-bold transition-transform transform hover:scale-105 hover:bg-[#3A494D] hover:text-[#B2FFB2] duration-300 ease-in-out"
+                >
+                  Update
+                </button>
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  className="hover:animate-tilt pr-5 text-xl cursor-pointer text-[#D9D9D9] hover:text-[#FF5A5F] transition-colors duration-300"
+                  onClick={() => document.getElementById("delete_modal").showModal()}
+                />
+              </div>
+
+              <dialog id="delete_modal" className="modal">
+                <div className="modal-box">
+                  <form method="dialog">
+                    {/* if there is a button in form, it will close the modal */}
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                  </form>
+                  <p className="py-4">{deletePrompt}</p>
+                  <input
+                    type="text"
+                    placeholder="Type the exact text here"
+                    value={deleteUserInput}
+                    onChange={(e) => {
+                      setDeleteUserInput(e.target.value);
+                    }}
+                    className="input input-bordered w-full mt-2"
+                  />
+                  <div className="modal-action">
+                    <button type="button" className="btn btn-error" onClick={handleDeleteClick}>
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </dialog>
             </form>
 
             {errorMessage && (
