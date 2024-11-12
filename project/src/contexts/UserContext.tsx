@@ -32,6 +32,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
         setUser(response.data);
       } catch (err) {
         setError("Failed to load user");
+        setUser(null);
       } finally {
         setLoading(false);
       }

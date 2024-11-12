@@ -31,19 +31,40 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
     }
 
-    // Create JWT token
-    const token = jwt.sign({ id: existingUser.id, email: existingUser.email }, process.env.JWT_SECRET as string, {
-      expiresIn: "1h",
-    });
+    // Create JWT access token
+    const accessToken = jwt.sign(
+      { id: existingUser.id, email: existingUser.email },
+      process.env.JWT_SECRET_ACCESS as string,
+      {
+        expiresIn: "1h",
+      }
+    );
+
+    // Create JWT refresh token
+    const refreshToken = jwt.sign(
+      { id: existingUser.id, email: existingUser.email },
+      process.env.JWT_SECRET_REFRESH as string,
+      {
+        expiresIn: "30d",
+      }
+    );
 
     // Set Cookies
     const response = NextResponse.json({ message: "Login successful" }, { status: 200 });
 
-    response.cookies.set("token", token, {
+    response.cookies.set("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 3600,
+      path: "/",
+    });
+
+    response.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 2592000, // 30 days
       path: "/",
     });
 
