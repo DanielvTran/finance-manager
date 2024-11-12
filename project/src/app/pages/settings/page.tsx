@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Settings() {
+  const router = useRouter();
   const pathname = usePathname();
   const { user, loading, error } = useUser();
   const [isEditable, setIsEditable] = useState(false);
@@ -49,9 +50,15 @@ export default function Settings() {
     }
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = async () => {
     if (deleteUserInput === deletePrompt) {
-      alert(`Same: deleteUserInput:${deleteUserInput} deletePrompt:${deletePrompt}`);
+      const response = await axios.delete("/api/user/delete-user");
+
+      localStorage.removeItem("token");
+
+      if (response.status === 200) {
+        router.push("/");
+      }
     } else {
       alert(`Not Same: deleteUserInput:${deleteUserInput} deletePrompt:${deletePrompt}`);
     }
@@ -209,11 +216,14 @@ export default function Settings() {
 
               <dialog id="delete_modal" className="modal">
                 <div className="modal-box">
-                  <form method="dialog">
-                    {/* if there is a button in form, it will close the modal */}
-                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-                  </form>
-                  <p className="py-4">{deletePrompt}</p>
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                    onClick={() => document.getElementById("delete_modal").close()}
+                  >
+                    ✕
+                  </button>
+                  <p className="py-4">Please enter this text to delete your account '{deletePrompt}'</p>
                   <input
                     type="text"
                     placeholder="Type the exact text here"

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../lib/prisma";
 import jwt from "jsonwebtoken";
 
-export async function GET(req: NextRequest) {
+export async function DELETE(req: NextRequest) {
   try {
     // Get the token from cookies
     const token = req.cookies.get("token")?.value;
@@ -29,8 +29,21 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    // Delete the user by id
+    const deletedUser = await prisma.user.delete({
+      where: { id: decoded.id },
+      select: { id: true, email: true, firstName: true, lastName: true },
+    });
+
+    console.log(deletedUser);
+
+    // Expire the token
+    const response = NextResponse.json({ message: "User deleted successfully", deletedUser }, { status: 200 });
+
+    response.cookies.set("token", "", { maxAge: 0, path: "/" });
+
     // Return user data
-    return NextResponse.json(user, { status: 200 });
+    return response;
   } catch (error) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
