@@ -4,7 +4,15 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { links } from "../../../../lib";
 
-export default function Budgeting() {
+import Category from "@/components/Category";
+
+// Font Awesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+
+const data = ["1", "2", "3", "4", "5", "6", "1", "2", "3", "4", "5", "6", "1", "2", "3", "5"];
+
+export default function Categories() {
   const pathname = usePathname();
 
   return (
@@ -20,7 +28,7 @@ export default function Budgeting() {
                 href={link.href}
                 className={`text-xl md:text-2xl lg:text-3xl block transition ${
                   pathname === link.href
-                    ? "text-[#98FF98] border-r-4 border-[#98FF98] pr-2" // Active styles
+                    ? "text-[#98FF98] border-r-4 border-[#98FF98] pr-2"
                     : "text-[#DFFFE2] hover:text-[#98FF98]"
                 }`}
               >
@@ -31,10 +39,32 @@ export default function Budgeting() {
         </div>
       </div>
 
-      <div className="right-container w-full lg:w-4/5 bg-[#F2F2F2] flex min-h-screen py-20 px-20">
-        <div className="max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-2xl 3xl:max-w-3xl">
-          <h1 className="text-[#323E42] font-bold text-3xl lg:text-4xl text-left mb-10">Categories</h1>
-          <div className="reports-container grid grid-cols-3 grid-rows-2 gap-4">Content</div>
+      <div className="right-container text-[#323E42] w-full lg:w-4/5 bg-[#F2F2F2] flex flex-col min-h-screen py-20 px-20">
+        <h1 className=" font-bold text-3xl lg:text-4xl text-left mb-10">Personalise your categories!</h1>
+        <div className="categories-container">
+          <div className="header flex flex-row justify-between mb-10">
+            <h1 className="heading lg:text-2xl font-bold">Categories</h1>
+            <div className="header-actions flex flex-row gap-5 items-center">
+              <FontAwesomeIcon icon={faCirclePlus} className="text-xl" />
+              <select className="sort bg-white rounded p-1">
+                <option value="">Sort</option>
+                <option value="">Sort</option>
+                <option value="">Sort</option>
+              </select>
+              <select className="filter bg-white rounded p-1">
+                <option value="">Filter</option>
+                <option value="">Filter</option>
+                <option value="">Filter</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto">
+            {/* TO-DO: For key prop use the id of the category from mysql */}
+            {data.map((item, index) => (
+              <Category key={index} title={item} description={item} />
+            ))}
+          </div>
         </div>
       </div>
     </div>

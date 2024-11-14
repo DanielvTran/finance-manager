@@ -33,10 +33,10 @@ export default function Settings() {
   } = useForm<IUserSettingsForm>({
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
-      firstName: user?.firstName,
-      lastName: user?.lastName,
-      email: user?.email,
-      password: user?.password,
+      firstName: user?.firstName ?? undefined,
+      lastName: user?.lastName ?? undefined,
+      email: user?.email ?? undefined,
+      password: user?.password ?? undefined,
     },
   });
 
@@ -53,8 +53,6 @@ export default function Settings() {
   const handleDeleteClick = async () => {
     if (deleteUserInput === deletePrompt) {
       const response = await axios.delete("/api/user/delete-user");
-
-      localStorage.removeItem("token");
 
       if (response.status === 200) {
         router.push("/");
@@ -107,7 +105,11 @@ export default function Settings() {
               {/* First Name Input */}
               <div
                 className={`flex w-fit items-center bg-[#ffffff] rounded-xl border transition-all duration-200 ${
-                  errors.firstName ? "border-[#E57373] border-2" : isEditable ? "border-[#E5B973]" : "border-gray-300"
+                  errors.firstName
+                    ? "border-[#E57373] border-2"
+                    : isEditable
+                    ? "border-[#E5B973] border-[2px]"
+                    : "border-gray-300"
                 } `}
               >
                 <input
@@ -115,7 +117,7 @@ export default function Settings() {
                   readOnly={!isEditable}
                   placeholder={errors.firstName ? errors.firstName.message : "First Name"}
                   type="text"
-                  className={`w-fit pl-5 py-5 rounded-xl bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
+                  className={`w-fit pl-5 py-5 rounded-xl pr-2 bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
                     errors.firstName ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                   } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
                 />
@@ -131,7 +133,11 @@ export default function Settings() {
               {/* Last Name Input */}
               <div
                 className={`flex w-fit items-center bg-[#ffffff] rounded-xl border transition-all duration-200 ${
-                  errors.lastName ? "border-[#E57373] border-2" : isEditable ? "border-[#E5B973]" : "border-gray-300"
+                  errors.lastName
+                    ? "border-[#E57373] border-2"
+                    : isEditable
+                    ? "border-[#E5B973] border-[2px]"
+                    : "border-gray-300"
                 } `}
               >
                 <input
@@ -139,7 +145,7 @@ export default function Settings() {
                   readOnly={!isEditable}
                   placeholder={errors.lastName ? errors.lastName.message : "Last Name"}
                   type="text"
-                  className={`w-fit pl-5 py-5 rounded-xl bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
+                  className={`w-fit pl-5 py-5 rounded-xl pr-2 bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
                     errors.lastName ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                   } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
                 />
@@ -155,7 +161,11 @@ export default function Settings() {
               {/* Email Input */}
               <div
                 className={`flex w-fit items-center bg-[#ffffff] rounded-xl border transition-all duration-200 ${
-                  errors.email ? "border-[#E57373] border-2" : isEditable ? "border-[#E5B973]" : "border-gray-300"
+                  errors.email
+                    ? "border-[#E57373] border-2"
+                    : isEditable
+                    ? "border-[#E5B973] border-[2px]"
+                    : "border-gray-300"
                 } `}
               >
                 <input
@@ -163,7 +173,7 @@ export default function Settings() {
                   readOnly={!isEditable}
                   placeholder={errors.email ? errors.email.message : "Email"}
                   type="text"
-                  className={`w-fit pl-5 py-5 rounded-xl bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
+                  className={`w-fit pl-5 py-5 rounded-xl pr-2 bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
                     errors.email ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                   } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
                 />
@@ -179,7 +189,11 @@ export default function Settings() {
               {/* Password Input */}
               <div
                 className={`flex w-fit items-center bg-[#ffffff] rounded-xl border transition-all duration-200 ${
-                  errors.password ? "border-[#E57373] border-2" : isEditable ? "border-[#E5B973]" : "border-gray-300"
+                  errors.password
+                    ? "border-[#E57373] border-2"
+                    : isEditable
+                    ? "border-[#E5B973] border-[2px]"
+                    : "border-gray-300"
                 } `}
               >
                 <input
@@ -187,10 +201,11 @@ export default function Settings() {
                   readOnly={!isEditable}
                   placeholder={errors.password ? errors.password.message : "Password"}
                   type="password"
-                  className={`w-fit pl-5 py-5 rounded-xl bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
+                  className={`w-fit pl-5 py-5 rounded-xl pr-2 bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
                     errors.password ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                   } ${isEditable ? "border-none" : "cursor-not-allowed"}`}
                 />
+
                 <FontAwesomeIcon
                   icon={faEllipsisVertical}
                   className={`pr-5 text-xl cursor-pointer transition-colors ${
@@ -210,20 +225,33 @@ export default function Settings() {
                 <FontAwesomeIcon
                   icon={faTrash}
                   className="hover:animate-tilt pr-5 text-xl cursor-pointer text-[#D9D9D9] hover:text-[#FF5A5F] transition-colors duration-300"
-                  onClick={() => document.getElementById("delete_modal").showModal()}
+                  onClick={() => {
+                    const modal = document.getElementById("delete_modal") as HTMLDialogElement | null;
+                    if (modal) {
+                      modal.showModal();
+                    }
+                  }}
                 />
               </div>
 
-              <dialog id="delete_modal" className="modal">
-                <div className="modal-box">
+              <dialog id="delete_modal" className="modal font-bold rounded-lg">
+                <div className="modal-box   p-6 shadow-lg">
                   <button
                     type="button"
-                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-                    onClick={() => document.getElementById("delete_modal").close()}
+                    className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-[#3A6F66] hover:bg-[#3A494D] hover:text-[#F2F2F2]"
+                    onClick={() => {
+                      const modal = document.getElementById("delete_modal") as HTMLDialogElement | null;
+                      if (modal) {
+                        modal.close();
+                      }
+                    }}
                   >
                     ✕
                   </button>
-                  <p className="py-4">Please enter this text to delete your account '{deletePrompt}'</p>
+                  <p className="py-4 text-[#3A6F66] text-lg">
+                    Please enter this text to delete your account{" "}
+                    <span className="text-[#E57373] font-semibold">'{deletePrompt}'</span>
+                  </p>
                   <input
                     type="text"
                     placeholder="Type the exact text here"
@@ -231,10 +259,14 @@ export default function Settings() {
                     onChange={(e) => {
                       setDeleteUserInput(e.target.value);
                     }}
-                    className="input input-bordered w-full mt-2"
+                    className="input input-bordered w-full mt-2 border-[#D9D9D9] focus:border-[#98FF98] placeholder:text-[#3A6F66]"
                   />
                   <div className="modal-action">
-                    <button type="button" className="btn btn-error" onClick={handleDeleteClick}>
+                    <button
+                      type="button"
+                      className="btn btn-error bg-[#FF5A5F] text-white font-bold hover:bg-[#FF3333]"
+                      onClick={handleDeleteClick}
+                    >
                       Delete
                     </button>
                   </div>

@@ -40,7 +40,8 @@ export async function DELETE(req: NextRequest) {
     // Expire the token
     const response = NextResponse.json({ message: "User deleted successfully", deletedUser }, { status: 200 });
 
-    response.cookies.set("token", "", { maxAge: 0, path: "/" });
+    response.cookies.set("accessToken", "", { maxAge: 0, path: "/" });
+    response.cookies.set("refreshToken", "", { maxAge: 0, path: "/" });
 
     // Return user data
     return response;
