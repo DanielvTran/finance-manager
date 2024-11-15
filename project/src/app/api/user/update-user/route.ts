@@ -5,39 +5,30 @@ import bcrypt from "bcrypt";
 
 export async function POST(req: NextRequest) {
   try {
-    // Get the token from cookies
-    const token = req.cookies.get("token")?.value;
+    const token = req.cookies.get("accessToken")?.value;
 
     if (!token) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized: No token provided" }, { status: 401 });
     }
 
-    // Verify the token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: number };
+    console.log("Token received:", token);
 
-    // Destructure body
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_ACCESS as string) as { id: number };
+    console.log("Decoded Token Payload:", decoded);
+
     const { email, password, firstName, lastName } = await req.json();
+    console.log("Request body:", { email, password, firstName, lastName });
 
-    // Hash the password before storing
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = password ? await bcrypt.hash(password, 12) : undefined;
 
-    // Fetch user by id
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
-      select: {
-        id: true,
-        email: true,
-        password: true,
-        firstName: true,
-        lastName: true,
-      },
-    });
+    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Update the user data in the database
+    console.log("Fetched user:", user);
+
     const updatedUser = await prisma.user.update({
       where: { id: decoded.id },
       data: {
@@ -46,18 +37,13 @@ export async function POST(req: NextRequest) {
         firstName: firstName || undefined,
         lastName: lastName || undefined,
       },
-      select: {
-        id: true,
-        email: true,
-        password: true,
-        firstName: true,
-        lastName: true,
-      },
     });
 
-    // Return user data
+    console.log("Updated user:", updatedUser);
+
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    console.error("Error:", error);
+    return NextResponse.json({ error: "Server error or invalid token" }, { status: 500 });
   }
 }

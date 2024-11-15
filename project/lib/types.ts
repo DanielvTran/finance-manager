@@ -7,6 +7,11 @@ export interface IUserSettingsForm {
   password: string;
 }
 
+export interface ICategoriesForm {
+  name: string;
+  description: string;
+}
+
 export interface TokenPayload extends JWTPayload {
   id: number;
   email: string;

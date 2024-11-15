@@ -21,6 +21,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Category name is required" }, { status: 400 });
     }
 
+    // Check if a category with the same name already exists for the user
+    const existingCategory = await prisma.category.findFirst({
+      where: {
+        name,
+        userId: decoded.id,
+      },
+    });
+
+    if (existingCategory) {
+      return NextResponse.json({ error: "Category already exists for this user" }, { status: 400 });
+    }
+
     // Create the new category associated with the user
     const newCategory = await prisma.category.create({
       data: {

@@ -3,17 +3,48 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { links } from "../../../../lib";
-
 import Category from "@/components/Category";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { categorySchema } from "../../../../lib/validationSchema";
+import axios from "axios";
+import { useUser } from "@/contexts/UserContext";
+import { ICategoriesForm } from "../../../../lib/types";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const data = ["1", "2", "3", "4", "5", "6", "1", "2", "3", "4", "5", "6", "1", "2", "3", "5"];
 
 export default function Categories() {
   const pathname = usePathname();
+
+  const {
+    register,
+    setValue,
+    getValues,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<ICategoriesForm>({
+    resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+  });
+
+  const onSubmit: SubmitHandler<ICategoriesForm> = async (data) => {
+    try {
+      setValue("name", getValues("name"));
+      setValue("description", getValues("description"));
+
+      const response = await axios.post("/api/data/create-category", data);
+      console.log("Created category successfully:", response.data);
+    } catch (error) {
+      console.error("Update error:", error);
+    }
+  };
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
@@ -45,7 +76,17 @@ export default function Categories() {
           <div className="header flex flex-row justify-between mb-10">
             <h1 className="heading lg:text-2xl font-bold">Categories</h1>
             <div className="header-actions flex flex-row gap-5 items-center">
-              <FontAwesomeIcon icon={faCirclePlus} className="text-xl" />
+              <FontAwesomeIcon
+                icon={faCirclePlus}
+                className="text-xl hover:cursor-pointer"
+                onClick={() => {
+                  const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
+                  if (modal) {
+                    modal.showModal();
+                  }
+                }}
+              />
+
               <select className="sort bg-white rounded p-1">
                 <option value="">Sort</option>
                 <option value="">Sort</option>
@@ -67,6 +108,59 @@ export default function Categories() {
           </div>
         </div>
       </div>
+
+      <dialog id="add_categories_modal" className="modal">
+        <div className="modal-box w-[30%] h-[70%] bg-white px-6">
+          <div className="modal-header flex flex-row justify-between items-center mt-5">
+            <h3 className="font-bold text-4xl text-[#323E42] items-center justify-between">Categories</h3>
+            <FontAwesomeIcon
+              icon={faXmark}
+              className="text-2xl hover:cursor-pointer hover:text-[#E57373] transition-colors ease-in-out duration-300"
+              onClick={() => {
+                const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
+                if (modal) {
+                  modal.close();
+                }
+              }}
+            />
+          </div>
+
+          <div className="modal-action">
+            <form
+              method="dialog"
+              onSubmit={handleSubmit(onSubmit)}
+              className="categories-form flex flex-col w-full gap-10 mt-5"
+            >
+              {/* Name Input */}
+              <input
+                {...register("name")}
+                placeholder={errors.name ? errors.name.message : "Name"}
+                type="text"
+                className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
+                  errors.name ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
+                }`}
+              />
+
+              {/* Description Input */}
+              <input
+                {...register("description")}
+                placeholder={errors.description ? errors.description.message : "Description"}
+                type="text"
+                className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
+                  errors.description ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
+                }`}
+              />
+
+              <button
+                type="submit"
+                className="mt-10 w-full py-5 items-center justify-center text-[#98FF98] font-bold text-2xl border-2 border-[#98FF98] bg-[#323E42] rounded-xl transition-all duration-300 hover:border-4 hover:border-[#B2FFB2]"
+              >
+                Create
+              </button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 }

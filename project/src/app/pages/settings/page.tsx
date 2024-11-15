@@ -226,7 +226,7 @@ export default function Settings() {
                   icon={faTrash}
                   className="hover:animate-tilt pr-5 text-xl cursor-pointer text-[#D9D9D9] hover:text-[#FF5A5F] transition-colors duration-300"
                   onClick={() => {
-                    const modal = document.getElementById("delete_modal") as HTMLDialogElement | null;
+                    const modal = document.getElementById("delete_settings_modal") as HTMLDialogElement | null;
                     if (modal) {
                       modal.showModal();
                     }
@@ -234,13 +234,13 @@ export default function Settings() {
                 />
               </div>
 
-              <dialog id="delete_modal" className="modal font-bold rounded-lg">
+              <dialog id="delete_settings_modal" className="modal font-bold rounded-lg">
                 <div className="modal-box   p-6 shadow-lg">
                   <button
                     type="button"
                     className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-[#3A6F66] hover:bg-[#3A494D] hover:text-[#F2F2F2]"
                     onClick={() => {
-                      const modal = document.getElementById("delete_modal") as HTMLDialogElement | null;
+                      const modal = document.getElementById("delete_settings_modal") as HTMLDialogElement | null;
                       if (modal) {
                         modal.close();
                       }
