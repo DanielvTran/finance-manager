@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_ACCESS as string) as { id: number };
 
     // Parse the request body to get the category name
-    const { name } = await req.json();
+    const { name, description } = await req.json();
 
     if (!name) {
       return NextResponse.json({ error: "Category name is required" }, { status: 400 });
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
     const newCategory = await prisma.category.create({
       data: {
         name,
+        description,
         userId: decoded.id,
       },
     });

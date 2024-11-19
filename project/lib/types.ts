@@ -17,25 +17,25 @@ export interface TokenPayload extends JWTPayload {
   email: string;
 }
 
-export interface User {
+export interface IUser {
   id: number;
   firstName: string;
   lastName: string;
   email: string;
   createdAt: Date;
   updatedAt: Date;
-  transactions: Transaction[];
-  budgets: Budget[];
+  transactions: ITransaction[];
+  budgets: IBudget[];
 }
 
-export interface Category {
+export interface ICategory {
   id: number;
   name: string;
-  transactions: Transaction[];
-  budgets: Budget[];
+  transactions: ITransaction[];
+  budgets: IBudget[];
 }
 
-export interface Transaction {
+export interface ITransaction {
   id: number;
   amount: number;
   date: Date;
@@ -43,11 +43,11 @@ export interface Transaction {
   userId: number;
   categoryId: number;
   createdAt: Date;
-  User?: User;
-  Category?: Category;
+  User?: IUser;
+  Category?: ICategory;
 }
 
-export interface Budget {
+export interface IBudget {
   id: number;
   amount: number;
   startDate: Date;
@@ -55,8 +55,8 @@ export interface Budget {
   userId: number;
   categoryId: number;
   createdAt: Date;
-  User?: User;
-  Category?: Category;
+  User?: IUser;
+  Category?: ICategory;
 }
 
 export enum TransactionType {

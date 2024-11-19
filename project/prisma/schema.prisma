@@ -24,6 +24,7 @@ model User {
 model Category {
   id           Int           @id @default(autoincrement())
   name         String
+  description  String
   userId       Int
   User         User          @relation(fields: [userId], references: [id])
   transactions Transaction[]

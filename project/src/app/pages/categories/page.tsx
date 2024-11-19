@@ -3,21 +3,27 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { links } from "../../../../lib";
-import Category from "@/components/Category";
+import { useCategories } from "@/hooks/useCategories";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "../../../../lib/validationSchema";
 import axios from "axios";
-import { useUser } from "@/contexts/UserContext";
+import { useData } from "@/contexts/DataContext";
 import { ICategoriesForm } from "../../../../lib/types";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faXmark } from "@fortawesome/free-solid-svg-icons";
-
-const data = ["1", "2", "3", "4", "5", "6", "1", "2", "3", "4", "5", "6", "1", "2", "3", "5"];
+import { useEffect } from "react";
+import Category from "@/components/Category";
 
 export default function Categories() {
+  const { categories, loading, error, fetchCategories, addCategory, updateCategory, deleteCategory } = useCategories();
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   const pathname = usePathname();
 
   const {
@@ -39,7 +45,8 @@ export default function Categories() {
       setValue("name", getValues("name"));
       setValue("description", getValues("description"));
 
-      const response = await axios.post("/api/data/create-category", data);
+      const response = await addCategory(data);
+
       console.log("Created category successfully:", response.data);
     } catch (error) {
       console.error("Update error:", error);
@@ -101,10 +108,9 @@ export default function Categories() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto">
-            {/* TO-DO: For key prop use the id of the category from mysql */}
-            {data.map((item, index) => (
-              <Category key={index} title={item} description={item} />
-            ))}
+            {categories?.map((item, index) => (
+              <Category key={index} title={item.name} description={item.description} />
+            )) || <p>No categories available.</p>}
           </div>
         </div>
       </div>

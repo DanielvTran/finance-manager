@@ -1,37 +1,41 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Category, Transaction, Budget } from "../../lib/types";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { ICategory, ITransaction, Budget } from "../../lib/types";
 import axios from "axios";
 
 interface DataContextType {
-  categories: Category[] | null;
-  transactions: Transaction[] | null;
+  categories: ICategory[] | null;
+  transactions: ITransaction[] | null;
   budgets: Budget[] | null;
   loading: boolean;
   error: string | null;
-  fetchCategories: () => Promise<void>;
-  fetchTransactions: () => Promise<void>;
-  fetchBudgets: () => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [categories, setCategories] = useState<Category[] | null>(null);
-  const [transactions, setTransactions] = useState<Transaction[] | null>(null);
+  const [categories, setCategories] = useState<ICategory[] | null>(null);
+  const [transactions, setTransactions] = useState<ITransaction[] | null>(null);
   const [budgets, setBudgets] = useState<Budget[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get("/api/categories");
-      setCategories(response.data);
-    } catch (err) {
-      setError("Failed to load categories");
-    }
-  };
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("/api/data/get-category", { withCredentials: true });
+        setCategories(response.data);
+      } catch (err) {
+        setError("Failed to load categories");
+        setCategories(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const fetchTransactions = async () => {
     try {
@@ -59,9 +63,6 @@ export const DataContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
         budgets,
         loading,
         error,
-        fetchCategories,
-        fetchTransactions,
-        fetchBudgets,
       }}
     >
       {children}
