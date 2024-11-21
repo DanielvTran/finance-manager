@@ -1,17 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { useCategory } from "@/contexts/CategoriesContext";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 interface CategoryProps {
+  id: number;
   title: string;
   description: string;
 }
 
-export default function Category({ title, description }: CategoryProps) {
+export default function Category({ id, title, description }: CategoryProps) {
+  const { deleteCategory } = useCategory();
+
   const [isEditable, setIsEditable] = useState(false);
   const [isRemovable, setIsRemovable] = useState(false);
 
@@ -20,9 +24,16 @@ export default function Category({ title, description }: CategoryProps) {
     setIsRemovable(false); // Ensure only one state is active
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = async () => {
     setIsRemovable((prev) => !prev);
     setIsEditable(false); // Ensure only one state is active
+
+    try {
+      const response = await deleteCategory(id);
+      console.log("Deleted category successfully:", response);
+    } catch (error) {
+      console.error("Update error:", error);
+    }
   };
 
   return (

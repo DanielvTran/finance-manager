@@ -3,12 +3,10 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { links } from "../../../../lib";
-import { useCategories } from "@/hooks/useCategories";
+import { useCategory } from "@/contexts/CategoriesContext";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "../../../../lib/validationSchema";
-import axios from "axios";
-import { useData } from "@/contexts/DataContext";
 import { ICategoriesForm } from "../../../../lib/types";
 
 // Font Awesome
@@ -18,11 +16,13 @@ import { useEffect } from "react";
 import Category from "@/components/Category";
 
 export default function Categories() {
-  const { categories, loading, error, fetchCategories, addCategory, updateCategory, deleteCategory } = useCategories();
+  const { categories, fetchCategories, addCategory } = useCategory();
 
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  console.log("Categories on mount:", categories);
 
   const pathname = usePathname();
 
@@ -46,8 +46,13 @@ export default function Categories() {
       setValue("description", getValues("description"));
 
       const response = await addCategory(data);
+      console.log("Categories after add:", categories);
 
-      console.log("Created category successfully:", response.data);
+      const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
+      if (modal) {
+        modal.close();
+      }
+      console.log("Created category successfully:", response);
     } catch (error) {
       console.error("Update error:", error);
     }
@@ -108,8 +113,8 @@ export default function Categories() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto">
-            {categories?.map((item, index) => (
-              <Category key={index} title={item.name} description={item.description} />
+            {categories?.map((item) => (
+              <Category key={item.id} id={item.id} title={item.name} description={item.description} />
             )) || <p>No categories available.</p>}
           </div>
         </div>
