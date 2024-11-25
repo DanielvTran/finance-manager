@@ -38,27 +38,31 @@ export default function Category({ id, title, description }: CategoryProps) {
 
   return (
     <div
-      className={`category-container bg-white p-6 rounded-lg shadow-lg items-center transition-all duration-300 ${
-        isRemovable
-          ? "border-2 border-[#E57373]"
-          : isEditable
-          ? "border-2 border-[#E5B973]"
-          : "border border-transparent"
-      }`}
+      className={`category-container bg-white p-6 rounded-lg shadow-lg items-center transition-all duration-300 border border-transparent group`}
     >
       <div className="actions flex flex-row justify-between mb-5">
+        {/* Edit Icon */}
         <FontAwesomeIcon
           icon={faEllipsis}
-          className={`cursor-pointer transition-colors hover:text-[#E5B973] ${
-            isEditable ? "text-[#E5B973]" : "text-[#323E42]"
-          }`}
+          className="cursor-pointer transition-colors hover:text-[#E5B973]"
+          onMouseEnter={(e) => {
+            e.currentTarget.closest(".category-container")?.classList.add("hover-edit");
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.closest(".category-container")?.classList.remove("hover-edit");
+          }}
           onClick={handleEditClick}
         />
+        {/* Trash/Delete Icon */}
         <FontAwesomeIcon
           icon={faTrash}
-          className={`cursor-pointer transition-colors hover:text-[#E57373] ${
-            isRemovable ? "text-[#E57373]" : "text-[#323E42]"
-          }`}
+          className="cursor-pointer transition-colors hover:text-[#E57373]"
+          onMouseEnter={(e) => {
+            e.currentTarget.closest(".category-container")?.classList.add("hover-delete");
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.closest(".category-container")?.classList.remove("hover-delete");
+          }}
           onClick={handleDeleteClick}
         />
       </div>
@@ -66,6 +70,16 @@ export default function Category({ id, title, description }: CategoryProps) {
         <h1 className="title font-bold text-2xl mb-2">{title}</h1>
         <h2 className="description text-xl">{description}</h2>
       </div>
+
+      {/* Dynamic Border Styling */}
+      <style jsx>{`
+        .category-container.hover-edit {
+          border-color: #e5b973 !important;
+        }
+        .category-container.hover-delete {
+          border-color: #e57373 !important;
+        }
+      `}</style>
     </div>
   );
 }

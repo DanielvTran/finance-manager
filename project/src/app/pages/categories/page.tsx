@@ -11,16 +11,22 @@ import { ICategoriesForm } from "../../../../lib/types";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
+import { faCirclePlus, faXmark, faRobot } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 import Category from "@/components/Category";
 
 export default function Categories() {
   const { categories, fetchCategories, addCategory } = useCategory();
+  const [sortedCategories, setSortedCategories] = useState(categories || []);
+  const [sortOrder, setSortOrder] = useState("");
 
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    applySorting();
+  }, [categories, sortOrder]);
 
   console.log("Categories on mount:", categories);
 
@@ -31,6 +37,7 @@ export default function Categories() {
     setValue,
     getValues,
     formState: { errors },
+    reset,
     handleSubmit,
   } = useForm<ICategoriesForm>({
     resolver: zodResolver(categorySchema),
@@ -40,6 +47,22 @@ export default function Categories() {
     },
   });
 
+  const applySorting = () => {
+    if (!categories) return;
+
+    const sorted = [...categories];
+    if (sortOrder === "asc") {
+      sorted.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortOrder === "desc") {
+      sorted.sort((a, b) => b.name.localeCompare(a.name));
+    }
+    setSortedCategories(sorted);
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOrder(e.target.value);
+  };
+
   const onSubmit: SubmitHandler<ICategoriesForm> = async (data) => {
     try {
       setValue("name", getValues("name"));
@@ -47,6 +70,11 @@ export default function Categories() {
 
       const response = await addCategory(data);
       console.log("Categories after add:", categories);
+
+      reset({
+        name: "",
+        description: "",
+      });
 
       const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
       if (modal) {
@@ -90,7 +118,7 @@ export default function Categories() {
             <div className="header-actions flex flex-row gap-5 items-center">
               <FontAwesomeIcon
                 icon={faCirclePlus}
-                className="text-xl hover:cursor-pointer"
+                className="text-xl hover:cursor-pointer hover:text-[#84ff84] transition-colors ease-in-out duration-150"
                 onClick={() => {
                   const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
                   if (modal) {
@@ -99,24 +127,28 @@ export default function Categories() {
                 }}
               />
 
-              <select className="sort bg-white rounded p-1">
-                <option value="">Sort</option>
-                <option value="">Sort</option>
-                <option value="">Sort</option>
-              </select>
-              <select className="filter bg-white rounded p-1">
-                <option value="">Filter</option>
-                <option value="">Filter</option>
-                <option value="">Filter</option>
+              <select className="sort bg-white rounded p-1" value={sortOrder} onChange={handleSortChange}>
+                <option value="" disabled selected>
+                  Sort
+                </option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
               </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto">
-            {categories?.map((item) => (
-              <Category key={item.id} id={item.id} title={item.name} description={item.description} />
-            )) || <p>No categories available.</p>}
-          </div>
+          {sortedCategories && sortedCategories.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto">
+              {sortedCategories.map((item) => (
+                <Category key={item.id} id={item.id} title={item.name} description={item.description} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full mt-20">
+              <FontAwesomeIcon icon={faRobot} className="text-4xl mb-4" />
+              <p>No categories available</p>
+            </div>
+          )}
         </div>
       </div>
 

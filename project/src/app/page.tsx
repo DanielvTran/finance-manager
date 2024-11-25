@@ -8,7 +8,7 @@ export default function Home() {
           <h1 className="heading text-[#98FF98] font-bold text-4xl lg:text-5xl mb-4 lg:mb-5">MintyPlan</h1>
           <h2 className="text-2xl md:text-3xl text-[#DFFFE2] mb-6 lg:mb-10">Welcome to MintyPlan</h2>
           <p className="text-md md:text-lg text-[#DFFFE2] mb-4 lg:mb-5">
-            All in one application for managing your tasks!
+            All in one application for managing your finance!
           </p>
           <a
             href="/auth/login"

@@ -31,7 +31,7 @@ export const CategoryContextProvider: React.FC<{ children: React.ReactNode }> = 
     setError(null);
     try {
       const response = await axios.get("/api/data/get-category", { withCredentials: true });
-      setCategories(response.data);
+      setCategories(response.data.sort((a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name)));
     } catch (err) {
       setError("Failed to load categories");
       setCategories([]);
