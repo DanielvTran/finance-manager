@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "../../../../../../lib/prisma";
 import jwt from "jsonwebtoken";
 
-export async function DELETE(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
     // Get the token from cookies
     const token = req.cookies.get("accessToken")?.value;
@@ -11,7 +11,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Verify the token to extract user ID
+    // Verify the token and extract the user ID
     const decoded = jwt.verify(token, process.env.JWT_SECRET_ACCESS as string) as { id: number };
 
     // Extract the category ID from the URL
@@ -22,7 +22,14 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
     }
 
-    // Check if the category exists and belongs to the user
+    // Parse the request body to get the category name
+    const { name, description } = await req.json();
+
+    if (!name) {
+      return NextResponse.json({ error: "Category name is required" }, { status: 400 });
+    }
+
+    // Find the category to ensure it exists and belongs to the authenticated user
     const existingCategory = await prisma.category.findFirst({
       where: {
         id,
@@ -31,16 +38,20 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (!existingCategory) {
-      return NextResponse.json({ error: "Category not found or unauthorized" }, { status: 404 });
+      return NextResponse.json({ error: "Category not found or unauthorized access" }, { status: 404 });
     }
 
-    // Delete the category and return its details
-    const deletedCategory = await prisma.category.delete({
+    // Update the category with the provided fields
+    const updatedCategory = await prisma.category.update({
       where: { id },
+      data: {
+        ...(name && { name }),
+        ...(description && { description }),
+      },
     });
 
-    // Return the deleted category details
-    return NextResponse.json({ message: "Category deleted successfully", category: deletedCategory }, { status: 200 });
+    // Return the created category
+    return NextResponse.json(updatedCategory, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
   }

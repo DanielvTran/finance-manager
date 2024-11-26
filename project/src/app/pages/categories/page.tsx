@@ -16,9 +16,8 @@ import { useEffect, useState } from "react";
 import Category from "@/components/Category";
 
 export default function Categories() {
-  const { categories, fetchCategories, addCategory } = useCategory();
+  const { categories, sortOrder, setSortOrder, fetchCategories, addCategory, updateCategory } = useCategory();
   const [sortedCategories, setSortedCategories] = useState(categories || []);
-  const [sortOrder, setSortOrder] = useState("");
 
   useEffect(() => {
     fetchCategories();
@@ -63,7 +62,7 @@ export default function Categories() {
     setSortOrder(e.target.value);
   };
 
-  const onSubmit: SubmitHandler<ICategoriesForm> = async (data) => {
+  const onSubmitAdd: SubmitHandler<ICategoriesForm> = async (data) => {
     try {
       setValue("name", getValues("name"));
       setValue("description", getValues("description"));
@@ -171,7 +170,7 @@ export default function Categories() {
           <div className="modal-action">
             <form
               method="dialog"
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(onSubmitAdd)}
               className="categories-form flex flex-col w-full gap-10 mt-5"
             >
               {/* Name Input */}

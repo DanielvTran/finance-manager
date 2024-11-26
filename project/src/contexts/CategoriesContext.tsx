@@ -11,8 +11,10 @@ interface Category {
 
 interface CategoryContextType {
   categories: Category[] | null;
+  sortOrder: string;
   loading: boolean;
   error: string | null;
+  setSortOrder: (order: string) => void;
   fetchCategories: () => Promise<void>;
   addCategory: (data: Omit<Category, "id">) => Promise<void>;
   deleteCategory: (id: number) => Promise<void>;
@@ -23,6 +25,7 @@ const CategoryContext = createContext<CategoryContextType | undefined>(undefined
 
 export const CategoryContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [categories, setCategories] = useState<Category[] | null>(null);
+  const [sortOrder, setSortOrder] = useState("asc");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -77,8 +80,10 @@ export const CategoryContextProvider: React.FC<{ children: React.ReactNode }> = 
     <CategoryContext.Provider
       value={{
         categories,
+        sortOrder,
         loading,
         error,
+        setSortOrder,
         fetchCategories,
         addCategory,
         deleteCategory,
