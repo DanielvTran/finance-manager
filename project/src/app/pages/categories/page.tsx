@@ -118,7 +118,7 @@ export default function Categories() {
             <div className="header-actions flex flex-row gap-5 items-center">
               <FontAwesomeIcon
                 icon={faCirclePlus}
-                className="text-xl hover:cursor-pointer hover:text-[#84ff84] transition-colors ease-in-out duration-150"
+                className="text-xl hover:cursor-pointer hover:text-[#587d7b] transition-colors ease-in-out duration-150"
                 onClick={() => {
                   const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
                   if (modal) {
