@@ -33,6 +33,7 @@ model Category {
 
 model Transaction {
   id         Int             @id @default(autoincrement())
+  name       String
   amount     Float
   date       DateTime        @default(now())
   type       TransactionType

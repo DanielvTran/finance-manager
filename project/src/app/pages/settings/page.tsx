@@ -235,7 +235,7 @@ export default function Settings() {
               </div>
 
               <dialog id="delete_settings_modal" className="modal font-bold rounded-lg">
-                <div className="modal-box   p-6 shadow-lg">
+                <div className="modal-box shadow-lg">
                   <button
                     type="button"
                     className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-[#3A6F66] hover:bg-[#3A494D] hover:text-[#F2F2F2]"

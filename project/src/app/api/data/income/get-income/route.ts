@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "../../../../../lib/prisma";
+import prisma from "../../../../../../lib/prisma";
 import jwt from "jsonwebtoken";
 
 export async function GET(req: NextRequest) {
@@ -14,24 +14,35 @@ export async function GET(req: NextRequest) {
     // Verify the token to extract user ID
     const decoded = jwt.verify(token, process.env.JWT_SECRET_ACCESS as string) as { id: number };
 
-    // Fetch categories for the user from the database
-    const categories = await prisma.category.findMany({
+    // Fetch incomes (transactions of type 'INCOME') for the user
+    const incomes = await prisma.transaction.findMany({
       where: {
         userId: decoded.id,
+        type: "INCOME",
       },
       select: {
         id: true,
         name: true,
-        description: true,
+        amount: true,
+        date: true,
+        type: true,
+        categoryId: true,
+        Category: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+        },
       },
     });
 
-    if (!categories.length) {
+    if (!incomes.length) {
       return NextResponse.json({ error: "No categories found for the user" }, { status: 404 });
     }
 
     // Return categories data
-    return NextResponse.json(categories, { status: 200 });
+    return NextResponse.json(incomes, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
   }
