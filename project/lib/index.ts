@@ -25,3 +25,7 @@ export async function verifyToken(token: string, secret: Uint8Array): Promise<To
     return null;
   }
 }
+
+export function sum(a: number, b: number) {
+  return a + b;
+}
