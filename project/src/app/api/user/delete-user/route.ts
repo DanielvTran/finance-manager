@@ -35,8 +35,6 @@ export async function DELETE(req: NextRequest) {
       select: { id: true, email: true, firstName: true, lastName: true },
     });
 
-    console.log(deletedUser);
-
     // Expire the token
     const response = NextResponse.json({ message: "User deleted successfully", deletedUser }, { status: 200 });
 
