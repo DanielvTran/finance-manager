@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { loginUserSchema } from "../../../../../lib/validationSchema";
+import { signupUserSchema } from "../../../../../lib/validationSchema";
 import prisma from "../../../../../lib/prisma";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     // Check for body validation
-    const validation = loginUserSchema.safeParse(body);
+    const validation = signupUserSchema.safeParse(body);
 
     if (!validation.success) {
       return NextResponse.json(validation.error.errors, { status: 400 });
@@ -37,19 +37,36 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create JWT token
-    const token = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET as string, {
+    if (!newUser) {
+      return NextResponse.json({ error: "User creation failed" }, { status: 500 });
+    }
+
+    // Create JWT access token
+    const accessToken = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET_ACCESS as string, {
       expiresIn: "1h",
     });
 
-    // Set Cookies
-    const response = NextResponse.json({ user: newUser, status: 201 });
+    // Create JWT refresh token
+    const refreshToken = jwt.sign({ id: newUser.id, email: newUser.email }, process.env.JWT_SECRET_REFRESH as string, {
+      expiresIn: "30d",
+    });
 
-    response.cookies.set("token", token, {
+    // Set Cookies
+    const response = NextResponse.json({ body: newUser }, { status: 201 });
+
+    response.cookies.set("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 3600,
+      path: "/",
+    });
+
+    response.cookies.set("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 2592000, // 30 days
       path: "/",
     });
 

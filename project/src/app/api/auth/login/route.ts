@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
+      return NextResponse.json({ error: "Invalid email or password" }, { status: 409 });
     }
 
     // Compare provided password with stored hashed password

@@ -14,16 +14,30 @@ jest.mock("jsonwebtoken");
 
 // Create test suite for login endpoint
 describe("POST /auth/login", () => {
-  // Prevents modules interfering after each test case
-  afterEach(() => {
+  // Setup mock environment variables
+  const originalEnv = process.env;
+
+  // Prevents modules interfering before each test case
+  beforeEach(() => {
     jest.clearAllMocks();
+    process.env = {
+      ...originalEnv,
+      JWT_SECRET_ACCESS: "test_access_secret",
+      JWT_SECRET_REFRESH: "test_refresh_secret",
+      NODE_ENV: "development",
+    };
+  });
+
+  // Re-assign environment variables
+  afterEach(() => {
+    process.env = originalEnv;
   });
 
   // Test 1: Check for invalid body
   it("should return 400 if the request body is invalid", async () => {
     const request = new NextRequest("http://localhost", {
       method: "POST",
-      body: JSON.stringify({ email: "", password: "" }),
+      body: JSON.stringify({ email: "not-an-email", password: "short" }),
     });
 
     const response = await POST(request);
@@ -45,12 +59,12 @@ describe("POST /auth/login", () => {
 
     const response = await POST(request);
 
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(409);
     const body = await response.json();
     expect(body.error).toBe("Invalid email or password");
   });
 
-  // Test 3: Check for valid cookies set
+  // Test 3: Check for valid cookies being set
   it("should return 200 and set cookies for valid credentials", async () => {
     // Mock user data from Prisma
     prismaMock.user.findUnique.mockResolvedValue({
@@ -117,5 +131,33 @@ describe("POST /auth/login", () => {
     expect(response.status).toBe(500);
     const body = await response.json();
     expect(body.error).toBe("An unexpected error occurred");
+  });
+
+  // Test 5: Check if the user password is same as database
+  it("should return 401 if the password is incorrect", async () => {
+    // Mock user data
+    prismaMock.user.findUnique.mockResolvedValue({
+      id: 1,
+      email: "John.Doe@example.com",
+      password: "$2b$12$A9E9aX7XE8AvK8HEuCjueu67TSUlMY1H77zywsC5hh6Yx8/f/8yMO",
+      firstName: "John",
+      lastName: "Doe",
+      createdAt: new Date("2023-01-01T00:00:00Z"),
+      updatedAt: new Date("2023-11-25T10:15:00Z"),
+    });
+
+    // Mock bcrypt to return false for incorrect password
+    (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+
+    const request = new NextRequest("http://localhost", {
+      method: "POST",
+      body: JSON.stringify({ email: "John.Doe@example.com", password: "wrongpassword" }),
+    });
+
+    const response = await POST(request);
+
+    expect(response.status).toBe(401);
+    const body = await response.json();
+    expect(body.error).toBe("Invalid email or password");
   });
 });
