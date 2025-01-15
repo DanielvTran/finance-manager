@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUserSchema } from "../../../../lib/validationSchema";
@@ -18,7 +18,6 @@ import Nav from "@/components/Nav";
 
 export default function Settings() {
   const router = useRouter();
-  const pathname = usePathname();
   const { user, loading, error } = useUser();
   const [isEditable, setIsEditable] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -229,7 +228,7 @@ export default function Settings() {
                   >
                     ✕
                   </button>
-                  <p className="py-4 text-[#3A6F66] text-lg">
+                  <p className="py-4 text-[#ffffff] text-lg">
                     Please enter this text to delete your account{" "}
                     <span className="text-[#E57373] font-semibold">'{deletePrompt}'</span>
                   </p>
@@ -240,7 +239,7 @@ export default function Settings() {
                     onChange={(e) => {
                       setDeleteUserInput(e.target.value);
                     }}
-                    className="input input-bordered w-full mt-2 border-[#D9D9D9] focus:border-[#98FF98] placeholder:text-[#3A6F66]"
+                    className="input input-bordered w-full mt-2 border-[#D9D9D9] focus:border-[#98FF98] text-[#ffffff] placeholder:text-[#ffffff]"
                   />
                   <div className="modal-action">
                     <button
