@@ -6,10 +6,14 @@ import Link from "next/link";
 import Graph from "@/components/Graph";
 import { links } from "../../../lib";
 
+// Font Awesome
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+
 export default function Dashboard() {
   const pathname = usePathname();
 
-  const { user, loading, error } = useUser();
+  const { user, loading, error, logoutUser } = useUser();
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
@@ -37,9 +41,13 @@ export default function Dashboard() {
 
       <div className="right-container w-full lg:w-4/5 bg-[#F2F2F2] flex min-h-screen py-20 px-20">
         <div className="max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-2xl 3xl:max-w-3xl">
-          <h1 className="text-[#323E42] font-bold text-3xl lg:text-4xl text-left mb-10">
-            Welcome back, {user?.firstName}
-          </h1>
+          <div className="heading-container flex items-center align-center justify-between">
+            <h1 className="text-[#323E42] font-bold text-3xl lg:text-4xl text-left mb-10">
+              Welcome back, {user?.firstName}
+            </h1>
+            <FontAwesomeIcon icon={faRightFromBracket} onClick={logoutUser} />;
+          </div>
+
           <div className="reports-container grid grid-cols-3 grid-rows-2 gap-4">
             {/* Top Left - Income */}
             <div className="transaction-container col-span-2">

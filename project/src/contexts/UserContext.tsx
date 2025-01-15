@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: number;
@@ -16,11 +17,14 @@ interface UserContextType {
   loading: boolean;
   error: string | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  logoutUser: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const router = useRouter();
+
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +45,19 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
     fetchUser();
   }, []);
 
-  return <UserContext.Provider value={{ user, loading, error, setUser }}>{children}</UserContext.Provider>;
+  const logoutUser = async () => {
+    try {
+      await axios.post("/api/user/logout-user", { withCredentials: true });
+      router.push("/auth/login");
+      setUser(null);
+    } catch (err) {
+      setError("Failed to log out");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return <UserContext.Provider value={{ user, loading, error, setUser, logoutUser }}>{children}</UserContext.Provider>;
 };
 
 // Custom hook to use the user context
