@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useCategory } from "@/contexts/CategoriesContext";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,10 +27,6 @@ export default function Categories() {
     applySorting();
   }, [categories, sortOrder]);
 
-  console.log("Categories on mount:", categories);
-
-  const pathname = usePathname();
-
   const {
     register,
     setValue,
@@ -43,7 +38,6 @@ export default function Categories() {
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: "",
-      description: "",
     },
   });
 
@@ -66,14 +60,12 @@ export default function Categories() {
   const onSubmitAdd: SubmitHandler<ICategoriesForm> = async (data) => {
     try {
       setValue("name", getValues("name"));
-      setValue("description", getValues("description"));
 
       const response = await addCategory(data);
       console.log("Categories after add:", categories);
 
       reset({
         name: "",
-        description: "",
       });
 
       const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
@@ -120,7 +112,7 @@ export default function Categories() {
           {sortedCategories && sortedCategories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto">
               {sortedCategories.map((item) => (
-                <Category key={item.id} id={item.id} title={item.name} description={item.description} />
+                <Category key={item.id} id={item.id} title={item.name} />
               ))}
             </div>
           ) : (
@@ -161,16 +153,6 @@ export default function Categories() {
                 type="text"
                 className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
                   errors.name ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
-                }`}
-              />
-
-              {/* Description Input */}
-              <input
-                {...register("description")}
-                placeholder={errors.description ? errors.description.message : "Description"}
-                type="text"
-                className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
-                  errors.description ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                 }`}
               />
 

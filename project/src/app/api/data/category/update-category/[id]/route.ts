@@ -23,7 +23,7 @@ export async function PUT(req: NextRequest) {
     }
 
     // Parse the request body to get the category name
-    const { name, description } = await req.json();
+    const { name } = await req.json();
 
     if (!name) {
       return NextResponse.json({ error: "Category name is required" }, { status: 400 });
@@ -46,7 +46,6 @@ export async function PUT(req: NextRequest) {
       where: { id },
       data: {
         ...(name && { name }),
-        ...(description && { description }),
       },
     });
 

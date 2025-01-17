@@ -14,10 +14,9 @@ import { faEllipsis, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons"
 interface CategoryProps {
   id: number;
   title: string;
-  description: string;
 }
 
-export default function Category({ id, title, description }: CategoryProps) {
+export default function Category({ id, title }: CategoryProps) {
   const { categories, sortOrder, setSortOrder, deleteCategory, updateCategory } = useCategory();
   const [isEditable, setIsEditable] = useState(false);
   const [isRemovable, setIsRemovable] = useState(false);
@@ -33,7 +32,6 @@ export default function Category({ id, title, description }: CategoryProps) {
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: "",
-      description: "",
     },
   });
 
@@ -62,21 +60,19 @@ export default function Category({ id, title, description }: CategoryProps) {
   const onSubmitUpdate: SubmitHandler<ICategoriesForm> = async (data) => {
     try {
       setValue("name", getValues("name"));
-      setValue("description", getValues("description"));
 
       const response = await updateCategory(id, data);
       console.log("Categories after update:", categories);
 
       reset({
         name: "",
-        description: "",
       });
 
       const modal = document.getElementById("update_categories_modal") as HTMLDialogElement | null;
       if (modal) {
         modal.close();
       }
-      console.log("Created category successfully:", response);
+      console.log("Updated category successfully:", response);
     } catch (error) {
       console.error("Update error:", error);
     }
@@ -114,7 +110,6 @@ export default function Category({ id, title, description }: CategoryProps) {
       </div>
       <div className="content-container text-[#323E42] text-center mb-5">
         <h1 className="title font-bold text-2xl mb-2">{title}</h1>
-        <h2 className="description text-xl">{description}</h2>
       </div>
 
       <dialog id="update_categories_modal" className="modal">
@@ -146,16 +141,6 @@ export default function Category({ id, title, description }: CategoryProps) {
                 type="text"
                 className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
                   errors.name ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
-                }`}
-              />
-
-              {/* Description Input */}
-              <input
-                {...register("description")}
-                placeholder={errors.description ? errors.description.message : "Description"}
-                type="text"
-                className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
-                  errors.description ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                 }`}
               />
 

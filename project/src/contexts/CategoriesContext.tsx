@@ -6,7 +6,6 @@ import axios from "axios";
 interface Category {
   id: number;
   name: string;
-  description: string;
 }
 
 interface CategoryContextType {
@@ -44,6 +43,7 @@ export const CategoryContextProvider: React.FC<{ children: React.ReactNode }> = 
   };
 
   const addCategory = async (data: Omit<Category, "id">) => {
+    console.log(data);
     try {
       const response = await axios.post("/api/data/category/create-category", data, { withCredentials: true });
       setCategories((prev) => (prev ? [...prev, response.data] : [response.data]));

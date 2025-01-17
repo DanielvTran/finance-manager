@@ -1,4 +1,3 @@
-import { Category } from "@prisma/client";
 import { JWTPayload } from "jose";
 
 export interface IUserSettingsForm {
@@ -10,7 +9,6 @@ export interface IUserSettingsForm {
 
 export interface ICategoriesForm {
   name: string;
-  description: string;
 }
 
 export interface IIncomesForm {

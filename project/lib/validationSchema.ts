@@ -21,7 +21,6 @@ export const updateUserSchema = z.object({
 
 export const categorySchema = z.object({
   name: z.string().min(2, "First name must be at least 2 characters").optional(),
-  description: z.string().min(2, "Description must be at least 2 characters").optional(),
 });
 
 export const incomeSchema = z.object({
