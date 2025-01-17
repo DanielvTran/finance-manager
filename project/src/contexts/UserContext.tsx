@@ -17,6 +17,7 @@ interface UserContextType {
   loading: boolean;
   error: string | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  fetchUser: () => void;
   logoutUser: () => void;
 }
 
@@ -29,21 +30,17 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get("/api/user/get-user", { withCredentials: true });
-        setUser(response.data);
-      } catch (err) {
-        setError("Failed to load user");
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const fetchUser = async () => {
+    try {
+      const response = await axios.get("/api/user/get-user", { withCredentials: true });
+      setUser(response.data);
+    } catch (err) {
+      setError("Failed to load user");
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const logoutUser = async () => {
     try {
@@ -57,7 +54,11 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   };
 
-  return <UserContext.Provider value={{ user, loading, error, setUser, logoutUser }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, loading, error, setUser, fetchUser, logoutUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 // Custom hook to use the user context

@@ -47,7 +47,8 @@ export default function Login() {
       <div className="left-container w-full lg:w-2/5 bg-[#323E42] flex items-center justify-center min-h-screen">
         <div className="left-content p-6 md:p-10 lg:p-12">
           <h1 className="heading text-[#98FF98] font-bold text-4xl lg:text-5xl mb-4 lg:mb-10">LOGIN</h1>
-
+          <p>joshwong@gmail.com</p>
+          <p>fjdkslF(9</p>
           <form onSubmit={handleSubmit(onSubmit)} className="bg-[#323E42] space-y-4 rounded-lg mb-5">
             <input
               {...register("email")}
@@ -77,14 +78,12 @@ export default function Login() {
               LOGIN
             </button>
           </form>
-
           <p className="text-sm md:text-base text-[#F2F2F2] mb-5">
             New to MintyPlan?{" "}
             <a href="/auth/signup" className="text-[#F2F2F2] hover:text-[#98FF98] underline">
               Create account
             </a>
           </p>
-
           {errorMessage ? (
             <p className="bg-[#F2F2F2] text-center font-bold rounded-xl py-3 text-[#E57373] border-2 border-[#E57373]">
               {errorMessage}

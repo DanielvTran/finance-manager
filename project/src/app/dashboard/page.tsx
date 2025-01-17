@@ -2,12 +2,18 @@
 
 import { useUser } from "@/contexts/UserContext";
 import Graph from "@/components/Graph";
+import { useEffect } from "react";
 
 // Components
 import Nav from "@/components/Nav";
 
 export default function Dashboard() {
-  const { user, loading, error, logoutUser } = useUser();
+  const { user, loading, error, fetchUser, logoutUser } = useUser();
+
+  // Fetch user data on mount
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
