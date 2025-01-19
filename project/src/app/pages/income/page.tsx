@@ -1,11 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import { useIncome } from "@/contexts/IncomeContext";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { incomeSchema } from "../../../../lib/validationSchema";
 import { IIncomesForm } from "../../../../lib/types";
+import { useCategory } from "@/contexts/CategoriesContext";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 // Components
 import Nav from "@/components/Nav";
@@ -14,38 +17,37 @@ import Nav from "@/components/Nav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faXmark, faRobot } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import Category from "@/components/Category";
 
 export default function Income() {
   const { incomes, sortOrder, setSortOrder, fetchIncomes, addIncome, updateIncome } = useIncome();
+  const { categories, fetchCategories } = useCategory();
+
   const [sortedIncomes, setSortedIncomes] = useState(incomes || []);
 
   useEffect(() => {
     fetchIncomes();
+    fetchCategories();
   }, []);
 
   useEffect(() => {
     applySorting();
   }, [incomes, sortOrder]);
 
-  console.log("Incomes on mount:", incomes);
-
-  const pathname = usePathname();
-
   const {
     register,
     setValue,
     getValues,
     formState: { errors },
+    control,
     reset,
     handleSubmit,
   } = useForm<IIncomesForm>({
     resolver: zodResolver(incomeSchema),
     defaultValues: {
-      name: "",
-      amount: 0,
-      date: new Date(),
-      categoryId: 0,
+      name: undefined,
+      amount: undefined,
+      date: undefined,
+      categoryId: undefined,
     },
   });
 
@@ -67,26 +69,21 @@ export default function Income() {
 
   const onSubmitAdd: SubmitHandler<IIncomesForm> = async (data) => {
     try {
-      setValue("name", getValues("name"));
-      setValue("amount", getValues("amount"));
-      setValue("date", getValues("date"));
-      setValue("categoryId", getValues("categoryId"));
-
       const response = await addIncome(data);
       console.log("Incomes after add:", incomes);
 
       reset({
-        name: "",
-        amount: 0,
-        date: new Date(),
-        categoryId: 0,
+        name: undefined,
+        amount: undefined,
+        date: undefined,
+        categoryId: undefined,
       });
 
-      const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
+      const modal = document.getElementById("add_incomes_modal") as HTMLDialogElement | null;
       if (modal) {
         modal.close();
       }
-      console.log("Created category successfully:", response);
+      console.log("Created income successfully:", response);
     } catch (error) {
       console.error("Update error:", error);
     }
@@ -97,16 +94,16 @@ export default function Income() {
       <Nav />
 
       <div className="right-container text-[#323E42] w-full lg:w-4/5 bg-[#F2F2F2] flex flex-col min-h-screen py-20 px-20">
-        <h1 className=" font-bold text-3xl lg:text-4xl text-left mb-10">Personalise your categories!</h1>
+        <h1 className=" font-bold text-3xl lg:text-4xl text-left mb-10">Here are your income transactions!</h1>
         <div className="categories-container">
           <div className="header flex flex-row justify-between mb-10">
-            <h1 className="heading lg:text-2xl font-bold">Categories</h1>
+            <h1 className="heading lg:text-2xl font-bold">Income</h1>
             <div className="header-actions flex flex-row gap-5 items-center">
               <FontAwesomeIcon
                 icon={faCirclePlus}
                 className="text-xl hover:cursor-pointer hover:text-[#587d7b] transition-colors ease-in-out duration-150"
                 onClick={() => {
-                  const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
+                  const modal = document.getElementById("add_incomes_modal") as HTMLDialogElement | null;
                   if (modal) {
                     modal.showModal();
                   }
@@ -140,15 +137,15 @@ export default function Income() {
         </div>
       </div>
 
-      <dialog id="add_categories_modal" className="modal">
+      <dialog id="add_incomes_modal" className="modal">
         <div className="modal-box w-[30%] h-[70%] bg-white px-6">
           <div className="modal-header flex flex-row justify-between items-center mt-5">
-            <h3 className="font-bold text-4xl text-[#323E42] items-center justify-between">Categories</h3>
+            <h3 className="font-bold text-4xl text-[#323E42] items-center justify-between">Incomes</h3>
             <FontAwesomeIcon
               icon={faXmark}
               className="text-2xl hover:cursor-pointer hover:text-[#E57373] transition-colors ease-in-out duration-300"
               onClick={() => {
-                const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
+                const modal = document.getElementById("add_incomes_modal") as HTMLDialogElement | null;
                 if (modal) {
                   modal.close();
                 }
@@ -171,16 +168,52 @@ export default function Income() {
                   errors.name ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                 }`}
               />
-
-              {/* Description Input */}
+              {/* Amount Input */}
               <input
-                {...register("description")}
-                placeholder={errors.description ? errors.description.message : "Description"}
-                type="text"
+                {...register("amount")}
+                placeholder={errors.amount ? errors.amount.message : "Amount"}
+                type="number"
                 className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
-                  errors.description ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
+                  errors.amount ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                 }`}
               />
+              {/* Date Input */}
+              <Controller
+                control={control}
+                name="date"
+                render={({ field }) => (
+                  <DatePicker
+                    selected={field.value}
+                    onChange={(date: Date | null) => {
+                      if (date) {
+                        field.onChange(date);
+                      }
+                    }}
+                    dateFormat="MMMM d, yyyy"
+                    placeholderText={errors.date ? errors.date.message : "Date"}
+                    required
+                    className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
+                      errors.date ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
+                    }`}
+                  />
+                )}
+              />
+              {/* Category Input */}
+              <select
+                {...register("categoryId")}
+                className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
+                  errors.categoryId ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
+                }`}
+              >
+                <option value="" disabled selected>
+                  Select Category
+                </option>
+                {categories?.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
 
               <button
                 type="submit"
