@@ -146,7 +146,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
               {/* Name Input */}
               <input
                 {...register("name")}
-                placeholder={errors.name ? errors.name.message : "Name"}
+                placeholder={errors.name ? errors.name.message : name}
                 type="text"
                 className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
                   errors.name ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
@@ -155,7 +155,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
               {/* Amount Input */}
               <input
                 {...register("amount")}
-                placeholder={errors.amount ? errors.amount.message : "Amount"}
+                placeholder={errors.amount ? errors.amount.message : `$${amount.toString()}`}
                 type="number"
                 className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
                   errors.amount ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
@@ -173,8 +173,8 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
                         field.onChange(date);
                       }
                     }}
-                    dateFormat="MMMM d, yyyy"
-                    placeholderText={errors.date ? errors.date.message : "Date"}
+                    dateFormat="dd/MM/yyyy"
+                    placeholderText={errors.date ? errors.date.message : format(new Date(date), "dd/MM/yyyy")}
                     required
                     className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
                       errors.date ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
@@ -189,8 +189,8 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
                   errors.categoryId ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                 }`}
               >
-                <option value="" disabled selected>
-                  Select Category
+                <option value={category} disabled selected>
+                  {category}
                 </option>
                 {categories?.map((category) => (
                   <option key={category.id} value={category.id}>
