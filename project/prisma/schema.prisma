@@ -37,22 +37,22 @@ model Transaction {
   date       DateTime        @default(now())
   type       TransactionType
   userId     Int
-  categoryId Int
+  categoryId Int?
   User       User            @relation(fields: [userId], references: [id])
-  Category   Category        @relation(fields: [categoryId], references: [id])
+  category   Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade) // No cascading deletes
   createdAt  DateTime        @default(now())
 }
 
 model Budget {
-  id         Int      @id @default(autoincrement())
+  id         Int       @id @default(autoincrement())
   amount     Float
   startDate  DateTime
   endDate    DateTime
   userId     Int
-  categoryId Int
-  User       User     @relation(fields: [userId], references: [id])
-  Category   Category @relation(fields: [categoryId], references: [id])
-  createdAt  DateTime @default(now())
+  categoryId Int?
+  User       User      @relation(fields: [userId], references: [id])
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade) // No cascading deletes
+  createdAt  DateTime  @default(now())
 }
 
 // Enum for transaction types (income or expense)

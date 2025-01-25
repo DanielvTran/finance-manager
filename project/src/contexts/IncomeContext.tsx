@@ -61,7 +61,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const deleteIncome = async (id: number) => {
     try {
-      await axios.delete(`/api/data/delete-income/${id}`, { withCredentials: true });
+      await axios.delete(`/api/data/income/delete-income/${id}`, { withCredentials: true });
       setIncomes((prev) => prev?.filter((income) => income.id !== id) ?? []);
     } catch (err) {
       setError("Failed to delete income");
@@ -70,7 +70,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const updateIncome = async (id: number, data: Partial<Income>) => {
     try {
-      const response = await axios.put(`/api/data/update-income/${id}`, data, { withCredentials: true });
+      const response = await axios.put(`/api/data/income/update-income/${id}`, data, { withCredentials: true });
       setIncomes((prev) => prev?.map((income) => (income.id === id ? { ...income, ...response.data } : income)) ?? []);
     } catch (err) {
       setError("Failed to update income");

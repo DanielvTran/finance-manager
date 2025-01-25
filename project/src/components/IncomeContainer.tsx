@@ -1,45 +1,38 @@
 "use client";
 
-import { useIncome } from "@/contexts/IncomeContext";
-import { SubmitHandler, useForm, Controller } from "react-hook-form";
+import { useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { incomeSchema } from "../../../../lib/validationSchema";
-import { IIncomesForm } from "../../../../lib/types";
-import { useCategory } from "@/contexts/CategoriesContext";
+import { incomeSchema } from "../../lib/validationSchema";
+import { format } from "date-fns";
+import { useIncome } from "@/contexts/IncomeContext";
+import { IIncomesForm } from "../../lib/types";
 import DatePicker from "react-datepicker";
-
-import "react-datepicker/dist/react-datepicker.css";
-
-// Components
-import Nav from "@/components/Nav";
-import IncomeContainer from "@/components/IncomeContainer";
+import { useCategory } from "@/contexts/CategoriesContext";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faXmark, faRobot } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { faEllipsis, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 
-export default function Income() {
-  const { incomes, sortOrder, setSortOrder, fetchIncomes, addIncome } = useIncome();
-  const { categories, fetchCategories } = useCategory();
+interface IncomeProps {
+  id: number;
+  name: string;
+  date: Date;
+  amount: number;
+  category: string;
+}
 
-  const [sortedIncomes, setSortedIncomes] = useState(incomes || []);
+export default function IncomeContainer({ id, name, date, amount, category }: IncomeProps) {
+  const { categories } = useCategory();
+  const { incomes, sortOrder, setSortOrder, deleteIncome, updateIncome } = useIncome();
 
-  useEffect(() => {
-    fetchIncomes();
-    fetchCategories();
-  }, []);
-
-  console.log("Incomes:", incomes);
-
-  useEffect(() => {
-    applySorting();
-  }, [incomes, sortOrder]);
+  const [isEditable, setIsEditable] = useState(false);
+  const [isRemovable, setIsRemovable] = useState(false);
 
   const {
     register,
-    formState: { errors },
     control,
+    formState: { errors },
     reset,
     handleSubmit,
   } = useForm<IIncomesForm>({
@@ -52,106 +45,91 @@ export default function Income() {
     },
   });
 
-  const applySorting = () => {
-    if (!incomes) return;
+  const handleEditClick = () => {
+    setIsEditable((prev) => !prev);
+    setIsRemovable(false);
 
-    const sorted = [...incomes];
-    if (sortOrder === "asc") {
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortOrder === "desc") {
-      sorted.sort((a, b) => b.name.localeCompare(a.name));
+    const modal = document.getElementById("update_incomes_modal") as HTMLDialogElement | null;
+    if (modal) {
+      modal.showModal();
     }
-    setSortedIncomes(sorted);
   };
 
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortOrder(e.target.value);
-  };
+  const handleDeleteClick = async () => {
+    setIsRemovable((prev) => !prev);
+    setIsEditable(false);
 
-  const onSubmitAdd: SubmitHandler<IIncomesForm> = async (data) => {
     try {
-      const response = await addIncome(data);
-      console.log("Incomes after add:", incomes);
+      const response = await deleteIncome(id);
+      console.log("Deleted income successfully:", response);
+    } catch (error) {
+      console.error("Update error:", error);
+    }
+  };
+
+  const onSubmitUpdate: SubmitHandler<IIncomesForm> = async (data) => {
+    try {
+      const response = await updateIncome(id, data);
+      console.log("Incomes after update:", incomes);
 
       reset({
-        name: undefined,
-        amount: undefined,
-        date: undefined,
-        categoryId: undefined,
+        name: "",
       });
 
-      const modal = document.getElementById("add_incomes_modal") as HTMLDialogElement | null;
+      const modal = document.getElementById("update_incomes_modal") as HTMLDialogElement | null;
       if (modal) {
         modal.close();
       }
-      console.log("Created income successfully:", response);
+      console.log("Updated income successfully:", response);
     } catch (error) {
       console.error("Update error:", error);
     }
   };
 
   return (
-    <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
-      <Nav />
+    <div
+      className={`income-container bg-white p-6 rounded-lg shadow-lg items-center transition-all duration-300 border border-transparent group`}
+    >
+      <div className="content-container text-[#323E42] text-center my-5 flex justify-start items-center space-x-10 w-full">
+        <h1 className="name font-bold text-2xl w-1/4">{name}</h1>
+        <p className="category font-bold text-2xl w-1/4">{category}</p>
+        <p className="date font-bold text-2xl w-1/4">{format(new Date(date), "dd/MM/yyyy")}</p>
+        <p className="amount font-bold text-2xl w-1/4">${amount}</p>
 
-      <div className="right-container text-[#323E42] w-full lg:w-4/5 bg-[#F2F2F2] flex flex-col min-h-screen py-20 px-20">
-        <h1 className=" font-bold text-3xl lg:text-4xl text-left mb-10">Here are your income transactions!</h1>
-        <div className="incomes-container">
-          <div className="header flex flex-row justify-between mb-10">
-            <h1 className="heading lg:text-2xl font-bold">Income</h1>
-            <div className="header-actions flex flex-row gap-5 items-center">
-              <FontAwesomeIcon
-                icon={faCirclePlus}
-                className="text-xl hover:cursor-pointer hover:text-[#587d7b] transition-colors ease-in-out duration-150"
-                onClick={() => {
-                  const modal = document.getElementById("add_incomes_modal") as HTMLDialogElement | null;
-                  if (modal) {
-                    modal.showModal();
-                  }
-                }}
-              />
-
-              <select className="sort bg-white rounded p-1" value={sortOrder} onChange={handleSortChange}>
-                <option value="" disabled selected>
-                  Sort
-                </option>
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
-              </select>
-            </div>
-          </div>
-
-          {sortedIncomes && sortedIncomes.length > 0 ? (
-            <div className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto">
-              {sortedIncomes.map((item) => (
-                <IncomeContainer
-                  key={item.id}
-                  id={item.id}
-                  name={item.name}
-                  date={item.date}
-                  amount={item.amount}
-                  category={item.category?.name}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full mt-20">
-              <FontAwesomeIcon icon={faRobot} className="text-4xl mb-4" />
-              <p>No income records available</p>
-            </div>
-          )}
-        </div>
+        {/* Edit Icon */}
+        <FontAwesomeIcon
+          icon={faEllipsis}
+          className="cursor-pointer transition-colors hover:text-[#E5B973]"
+          onMouseEnter={(e) => {
+            e.currentTarget.closest(".income-container")?.classList.add("hover-edit");
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.closest(".income-container")?.classList.remove("hover-edit");
+          }}
+          onClick={handleEditClick}
+        />
+        {/* Trash/Delete Icon */}
+        <FontAwesomeIcon
+          icon={faTrash}
+          className="cursor-pointer transition-colors hover:text-[#E57373]"
+          onMouseEnter={(e) => {
+            e.currentTarget.closest(".income-container")?.classList.add("hover-delete");
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.closest(".income-container")?.classList.remove("hover-delete");
+          }}
+          onClick={handleDeleteClick}
+        />
       </div>
 
-      <dialog id="add_incomes_modal" className="modal">
+      <dialog id="update_incomes_modal" className="modal">
         <div className="modal-box w-[30%] h-[70%] bg-white px-6">
           <div className="modal-header flex flex-row justify-between items-center mt-5">
-            <h3 className="font-bold text-4xl text-[#323E42] items-center justify-between">Incomes</h3>
             <FontAwesomeIcon
               icon={faXmark}
               className="text-2xl hover:cursor-pointer hover:text-[#E57373] transition-colors ease-in-out duration-300"
               onClick={() => {
-                const modal = document.getElementById("add_incomes_modal") as HTMLDialogElement | null;
+                const modal = document.getElementById("update_incomes_modal") as HTMLDialogElement | null;
                 if (modal) {
                   modal.close();
                 }
@@ -162,7 +140,7 @@ export default function Income() {
           <div className="modal-action">
             <form
               method="dialog"
-              onSubmit={handleSubmit(onSubmitAdd)}
+              onSubmit={handleSubmit(onSubmitUpdate)}
               className="incomes-form flex flex-col w-full gap-10 mt-5"
             >
               {/* Name Input */}
@@ -225,12 +203,22 @@ export default function Income() {
                 type="submit"
                 className="mt-10 w-full py-5 items-center justify-center text-[#98FF98] font-bold text-2xl border-2 border-[#98FF98] bg-[#323E42] rounded-xl transition-all duration-300 hover:border-4 hover:border-[#B2FFB2]"
               >
-                Create
+                Update
               </button>
             </form>
           </div>
         </div>
       </dialog>
+
+      {/* Dynamic Border Styling */}
+      <style jsx>{`
+        .category-container.hover-edit {
+          border-color: #e5b973 !important;
+        }
+        .category-container.hover-delete {
+          border-color: #e57373 !important;
+        }
+      `}</style>
     </div>
   );
 }

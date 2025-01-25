@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
         date: true,
         type: true,
         categoryId: true,
-        Category: {
+        category: {
           select: {
             id: true,
             name: true,

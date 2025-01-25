@@ -14,19 +14,31 @@ export async function PUT(req: NextRequest) {
     // Verify the token and extract the user ID
     const decoded = jwt.verify(token, process.env.JWT_SECRET_ACCESS as string) as { id: number };
 
-    // Extract the category ID from the URL
+    // Extract the income ID from the URL
     const url = new URL(req.url);
     const id = Number(url.pathname.split("/").pop());
 
     if (!id) {
-      return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
+      return NextResponse.json({ error: "Income ID is required" }, { status: 400 });
     }
 
-    // Parse the request body to get the category name
-    const { name, description } = await req.json();
+    // Parse the request body to get the income name, date, amount, and category ID
+    const { name, amount, date, categoryId } = await req.json();
 
     if (!name) {
       return NextResponse.json({ error: "Category name is required" }, { status: 400 });
+    }
+
+    if (!amount) {
+      return NextResponse.json({ error: "Amount is required" }, { status: 400 });
+    }
+
+    if (!date) {
+      return NextResponse.json({ error: "Date is required" }, { status: 400 });
+    }
+
+    if (!categoryId) {
+      return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
     }
 
     // Find the category to ensure it exists and belongs to the authenticated user
@@ -46,7 +58,9 @@ export async function PUT(req: NextRequest) {
       where: { id },
       data: {
         ...(name && { name }),
-        ...(description && { description }),
+        ...(amount && { amount }),
+        ...(date && { date }),
+        ...(categoryId && { categoryId }),
       },
     });
 

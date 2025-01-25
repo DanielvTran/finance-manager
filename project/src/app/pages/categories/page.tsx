@@ -13,7 +13,7 @@ import Nav from "@/components/Nav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faXmark, faRobot } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import Category from "@/components/Category";
+import CategoryContainer from "@/components/CategoryContainer";
 
 export default function Categories() {
   const { categories, sortOrder, setSortOrder, fetchCategories, addCategory, updateCategory } = useCategory();
@@ -112,7 +112,7 @@ export default function Categories() {
           {sortedCategories && sortedCategories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto">
               {sortedCategories.map((item) => (
-                <Category key={item.id} id={item.id} title={item.name} />
+                <CategoryContainer key={item.id} id={item.id} title={item.name} />
               ))}
             </div>
           ) : (
