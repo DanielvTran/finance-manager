@@ -130,7 +130,7 @@ export default function Income() {
                   name={item.name}
                   date={item.date}
                   amount={item.amount}
-                  category={item.category?.name}
+                  category={item.category?.name || "Uncategorised"}
                 />
               ))}
             </div>

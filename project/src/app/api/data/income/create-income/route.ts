@@ -46,6 +46,9 @@ export async function POST(req: NextRequest) {
         userId: decoded.id,
         categoryId,
       },
+      include: {
+        category: true,
+      },
     });
 
     // Return the created category
