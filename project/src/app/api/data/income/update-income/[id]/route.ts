@@ -41,20 +41,23 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
     }
 
-    // Find the category to ensure it exists and belongs to the authenticated user
-    const existingCategory = await prisma.category.findFirst({
+    console.log("Request body:", { name, amount, date, categoryId });
+
+    // Find the income to ensure it exists and belongs to the authenticated user
+    const existingIncome = await prisma.transaction.findFirst({
       where: {
         id,
         userId: decoded.id,
+        type: "INCOME",
       },
     });
 
-    if (!existingCategory) {
-      return NextResponse.json({ error: "Category not found or unauthorized access" }, { status: 404 });
+    if (!existingIncome) {
+      return NextResponse.json({ error: "Income not found or unauthorized access" }, { status: 404 });
     }
 
-    // Update the category with the provided fields
-    const updatedCategory = await prisma.category.update({
+    // Update the income with the provided fields
+    const updatedIncome = await prisma.transaction.update({
       where: { id },
       data: {
         ...(name && { name }),
@@ -64,8 +67,8 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    // Return the created category
-    return NextResponse.json(updatedCategory, { status: 201 });
+    // Return the created income
+    return NextResponse.json(updatedIncome, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
   }
