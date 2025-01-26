@@ -16,7 +16,7 @@ import IncomeContainer from "@/components/IncomeContainer";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faXmark, faRobot } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faXmark, faRobot, faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 
 export default function Income() {
@@ -90,6 +90,8 @@ export default function Income() {
     }
   };
 
+  console.log("Sorted Incomes:", sortedIncomes);
+
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
       <Nav />
@@ -130,7 +132,7 @@ export default function Income() {
                   name={item.name}
                   date={item.date}
                   amount={item.amount}
-                  category={item.category?.name || "Uncategorised"}
+                  category={item.category?.name}
                 />
               ))}
             </div>

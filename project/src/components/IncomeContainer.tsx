@@ -12,7 +12,7 @@ import { useCategory } from "@/contexts/CategoriesContext";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCircleQuestion, faEllipsis, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 interface IncomeProps {
   id: number;
@@ -49,7 +49,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
     setIsEditable((prev) => !prev);
     setIsRemovable(false);
 
-    const modal = document.getElementById("update_incomes_modal") as HTMLDialogElement | null;
+    const modal = document.getElementById(`update_incomes_modal_${id}`) as HTMLDialogElement | null;
     if (modal) {
       modal.showModal();
     }
@@ -76,7 +76,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
         name: "",
       });
 
-      const modal = document.getElementById("update_incomes_modal") as HTMLDialogElement | null;
+      const modal = document.getElementById(`update_incomes_modal_${id}`) as HTMLDialogElement | null;
       if (modal) {
         modal.close();
       }
@@ -92,7 +92,12 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
     >
       <div className="content-container text-[#323E42] text-center my-5 flex justify-start items-center space-x-10 w-full">
         <h1 className="name font-bold text-2xl w-1/4">{name}</h1>
-        <p className="category font-bold text-2xl w-1/4">{category}</p>
+        {category ? (
+          <p className="category font-bold text-2xl w-1/4">{category}</p>
+        ) : (
+          <FontAwesomeIcon icon={faCircleQuestion} className="text-xl" />
+        )}
+
         <p className="date font-bold text-2xl w-1/4">{format(new Date(date), "dd/MM/yyyy")}</p>
         <p className="amount font-bold text-2xl w-1/4">${amount}</p>
 
@@ -122,14 +127,14 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
         />
       </div>
 
-      <dialog id="update_incomes_modal" className="modal">
+      <dialog id={`update_incomes_modal_${id}`} className="modal">
         <div className="modal-box w-[30%] h-[70%] bg-white px-6">
           <div className="modal-header flex flex-row justify-between items-center mt-5">
             <FontAwesomeIcon
               icon={faXmark}
               className="text-2xl hover:cursor-pointer hover:text-[#E57373] transition-colors ease-in-out duration-300"
               onClick={() => {
-                const modal = document.getElementById("update_incomes_modal") as HTMLDialogElement | null;
+                const modal = document.getElementById(`update_incomes_modal_${id}`) as HTMLDialogElement | null;
                 if (modal) {
                   modal.close();
                 }
@@ -155,7 +160,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
               {/* Amount Input */}
               <input
                 {...register("amount")}
-                placeholder={errors.amount ? errors.amount.message : `$${amount.toString()}`}
+                placeholder={errors.amount ? errors.amount.message : amount.toString()}
                 type="number"
                 className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
                   errors.amount ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
@@ -174,7 +179,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
                       }
                     }}
                     dateFormat="dd/MM/yyyy"
-                    placeholderText={errors.date ? errors.date.message : format(new Date(date), "dd/MM/yyyy")}
+                    placeholderText={errors.date ? errors.date.message : "Date"}
                     required
                     className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
                       errors.date ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
