@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { incomeSchema } from "../../lib/validationSchema";
+import { expenseSchema } from "../../lib/validationSchema";
 import { format } from "date-fns";
-import { useIncome } from "@/contexts/IncomeContext";
-import { IIncomesForm } from "../../lib/types";
+import { useExpense } from "@/contexts/ExpenseContext";
+import { IExpensesForm } from "../../lib/types";
 import DatePicker from "react-datepicker";
 import { useCategory } from "@/contexts/CategoriesContext";
 
@@ -14,7 +14,7 @@ import { useCategory } from "@/contexts/CategoriesContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion, faEllipsis, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 
-interface IncomeProps {
+interface ExpenseProps {
   id: number;
   name: string;
   date: Date;
@@ -22,9 +22,9 @@ interface IncomeProps {
   category: string;
 }
 
-export default function IncomeContainer({ id, name, date, amount, category }: IncomeProps) {
+export default function ExpenseContainer({ id, name, date, amount, category }: ExpenseProps) {
   const { categories } = useCategory();
-  const { incomes, sortOrder, fetchIncomes, setSortOrder, deleteIncome, updateIncome } = useIncome();
+  const { expenses, sortOrder, fetchExpenses, setSortOrder, deleteExpense, updateExpense } = useExpense();
 
   const [isEditable, setIsEditable] = useState(false);
   const [isRemovable, setIsRemovable] = useState(false);
@@ -35,8 +35,8 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
     formState: { errors },
     reset,
     handleSubmit,
-  } = useForm<IIncomesForm>({
-    resolver: zodResolver(incomeSchema),
+  } = useForm<IExpensesForm>({
+    resolver: zodResolver(expenseSchema),
     defaultValues: {
       name: undefined,
       amount: undefined,
@@ -49,7 +49,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
     setIsEditable((prev) => !prev);
     setIsRemovable(false);
 
-    const modal = document.getElementById(`update_incomes_modal_${id}`) as HTMLDialogElement | null;
+    const modal = document.getElementById(`update_expenses_modal_${id}`) as HTMLDialogElement | null;
     if (modal) {
       modal.showModal();
     }
@@ -60,27 +60,27 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
     setIsEditable(false);
 
     try {
-      const response = await deleteIncome(id);
-      console.log("Deleted income successfully:", response);
+      const response = await deleteExpense(id);
+      console.log("Deleted expense successfully:", response);
     } catch (error) {
       console.error("Update error:", error);
     }
   };
 
-  const onSubmitUpdate: SubmitHandler<IIncomesForm> = async (data) => {
+  const onSubmitUpdate: SubmitHandler<IExpensesForm> = async (data) => {
     try {
-      const response = await updateIncome(id, data);
-      console.log("Incomes after update:", incomes);
+      const response = await updateExpense(id, data);
+      console.log("Expenses after update:", expenses);
 
       reset({
         name: "",
       });
 
-      const modal = document.getElementById(`update_incomes_modal_${id}`) as HTMLDialogElement | null;
+      const modal = document.getElementById(`update_expenses_modal_${id}`) as HTMLDialogElement | null;
       if (modal) {
         modal.close();
       }
-      console.log("Updated income successfully:", response);
+      console.log("Updated expense successfully:", response);
     } catch (error) {
       console.error("Update error:", error);
     }
@@ -88,7 +88,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
 
   return (
     <div
-      className={`income-container bg-white p-6 rounded-lg shadow-lg items-center transition-all duration-300 border border-transparent group`}
+      className={`expense-container bg-white p-6 rounded-lg shadow-lg items-center transition-all duration-300 border border-transparent group`}
     >
       <div className="content-container text-[#323E42] text-center my-5 flex justify-start items-center space-x-10 w-full">
         <h1 className="name font-bold text-2xl w-1/4">{name}</h1>
@@ -106,10 +106,10 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
           icon={faEllipsis}
           className="cursor-pointer transition-colors hover:text-[#E5B973]"
           onMouseEnter={(e) => {
-            e.currentTarget.closest(".income-container")?.classList.add("hover-edit");
+            e.currentTarget.closest(".expense-container")?.classList.add("hover-edit");
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.closest(".income-container")?.classList.remove("hover-edit");
+            e.currentTarget.closest(".expense-container")?.classList.remove("hover-edit");
           }}
           onClick={handleEditClick}
         />
@@ -118,23 +118,23 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
           icon={faTrash}
           className="cursor-pointer transition-colors hover:text-[#E57373]"
           onMouseEnter={(e) => {
-            e.currentTarget.closest(".income-container")?.classList.add("hover-delete");
+            e.currentTarget.closest(".expense-container")?.classList.add("hover-delete");
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.closest(".income-container")?.classList.remove("hover-delete");
+            e.currentTarget.closest(".expense-container")?.classList.remove("hover-delete");
           }}
           onClick={handleDeleteClick}
         />
       </div>
 
-      <dialog id={`update_incomes_modal_${id}`} className="modal">
+      <dialog id={`update_expenses_modal_${id}`} className="modal">
         <div className="modal-box w-[30%] h-[70%] bg-white px-6">
           <div className="modal-header flex flex-row justify-between items-center mt-5">
             <FontAwesomeIcon
               icon={faXmark}
               className="text-2xl hover:cursor-pointer hover:text-[#E57373] transition-colors ease-in-out duration-300"
               onClick={() => {
-                const modal = document.getElementById(`update_incomes_modal_${id}`) as HTMLDialogElement | null;
+                const modal = document.getElementById(`update_expenses_modal_${id}`) as HTMLDialogElement | null;
                 if (modal) {
                   modal.close();
                 }
@@ -146,7 +146,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
             <form
               method="dialog"
               onSubmit={handleSubmit(onSubmitUpdate)}
-              className="incomes-form flex flex-col w-full gap-10 mt-5"
+              className="expenses-form flex flex-col w-full gap-10 mt-5"
             >
               {/* Name Input */}
               <input

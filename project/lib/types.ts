@@ -18,6 +18,13 @@ export interface IIncomesForm {
   amount: number;
 }
 
+export interface IExpensesForm {
+  name: string;
+  categoryId: number;
+  date: Date;
+  amount: number;
+}
+
 export interface TokenPayload extends JWTPayload {
   id: number;
   email: string;
