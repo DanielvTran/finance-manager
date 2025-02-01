@@ -25,6 +25,11 @@ export interface IExpensesForm {
   amount: number;
 }
 
+export interface IBudgetForm {
+  categoryId: number;
+  amount: number;
+}
+
 export interface TokenPayload extends JWTPayload {
   id: number;
   email: string;

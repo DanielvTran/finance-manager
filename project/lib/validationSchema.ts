@@ -60,3 +60,16 @@ export const expenseSchema = z.object({
     .transform((val) => parseFloat(val))
     .pipe(z.number().positive("Category must be positive").finite("Category must be a valid number")),
 });
+
+export const budgetSchema = z.object({
+  amount: z
+    .string()
+    .min(1, "Amount is required")
+    .transform((val) => parseFloat(val))
+    .pipe(z.number().positive("Amount must be positive").finite("Amount must be a valid number")),
+  categoryId: z
+    .string()
+    .min(1, "Category is required")
+    .transform((val) => parseFloat(val))
+    .pipe(z.number().positive("Category must be positive").finite("Category must be a valid number")),
+});
