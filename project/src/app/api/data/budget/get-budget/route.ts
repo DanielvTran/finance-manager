@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
     // Attach the percentage used to each budget
     const budgetsWithPercentage = budgets.map((budget) => {
       const totalSpent = budget.categoryId !== null ? expenseMap[budget.categoryId] ?? 0 : 0;
-      const percentage = Math.min((totalSpent / budget.amount) * 100, 100); // Cap at 100%
+      const percentage = (totalSpent / budget.amount) * 100;
 
       return { ...budget, totalSpent, percentage };
     });

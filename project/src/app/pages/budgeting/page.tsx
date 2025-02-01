@@ -53,9 +53,9 @@ export default function Budget() {
 
     const sorted = [...budgets];
     if (sortOrder === "asc") {
-      sorted.sort((a, b) => a.category.name.localeCompare(b.category.name));
+      sorted.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
     } else if (sortOrder === "desc") {
-      sorted.sort((a, b) => b.category.name.localeCompare(a.category.name));
+      sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     }
     setSortedBudgets(sorted);
   };
@@ -111,8 +111,8 @@ export default function Budget() {
                 <option value="" disabled selected>
                   Sort
                 </option>
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
+                <option value="asc">Oldest to Newest</option>
+                <option value="desc">Newest to Oldest</option>
               </select>
             </div>
           </div>

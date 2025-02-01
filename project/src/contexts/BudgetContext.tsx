@@ -10,6 +10,7 @@ interface Budget {
   categoryId: number;
   category: Category;
   percentage: number;
+  createdAt: Date;
 }
 
 interface BudgetContextType {
@@ -19,7 +20,7 @@ interface BudgetContextType {
   error: string | null;
   setSortOrder: (order: string) => void;
   fetchBudgets: () => Promise<void>;
-  addBudget: (data: Omit<Budget, "id" | "category" | "percentage">) => Promise<void>;
+  addBudget: (data: Omit<Budget, "id" | "category" | "percentage" | "createdAt">) => Promise<void>;
   deleteBudget: (id: number) => Promise<void>;
   updateBudget: (id: number, data: Partial<Omit<Budget, "category">>) => Promise<void>;
 }
@@ -38,11 +39,10 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
     try {
       const response = await axios.get("/api/data/budget/get-budget", { withCredentials: true });
-      console.log("Get Budget Response:", response);
-      const sortedBudgets: Budget[] = response.data.sort((a: Budget, b: Budget) =>
-        a.category.name.localeCompare(b.category.name)
+
+      const sortedBudgets: Budget[] = response.data.sort(
+        (a: Budget, b: Budget) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
-      console.log("Sorted Budget:", response);
 
       setBudgets(sortedBudgets);
     } catch (err) {
@@ -53,7 +53,7 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const addBudget = async (data: Omit<Budget, "id" | "category" | "percentage">) => {
+  const addBudget = async (data: Omit<Budget, "id" | "category" | "percentage" | "createdAt">) => {
     try {
       const response = await axios.post("/api/data/budget/create-budget", data, { withCredentials: true });
       setBudgets((prev) => (prev ? [...prev, response.data] : [response.data]));
