@@ -116,7 +116,7 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
         {/* Trash/Delete Icon */}
         <FontAwesomeIcon
           icon={faTrash}
-          className="cursor-pointer transition-colors hover:text-[#E57373]"
+          className="cursor-pointer transition-colors hover:text-[#E57373] hover:animate-tilt"
           onMouseEnter={(e) => {
             e.currentTarget.closest(".income-container")?.classList.add("hover-delete");
           }}

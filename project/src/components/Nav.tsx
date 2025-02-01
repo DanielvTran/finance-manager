@@ -12,6 +12,8 @@ export default function Nav() {
 
   const { logoutUser } = useUser();
 
+  const currentDate = new Date();
+
   return (
     <div className="left-container w-full lg:w-1/5 bg-[#323E42] flex justify-center min-h-screen py-10">
       <div className="left-content">

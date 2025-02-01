@@ -15,10 +15,11 @@ import { faEllipsis, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons"
 interface BudgetProps {
   id: number;
   category: string;
+  amount: number;
   percentage: number;
 }
 
-export default function BudgetContainer({ id, category, percentage }: BudgetProps) {
+export default function BudgetContainer({ id, category, amount, percentage }: BudgetProps) {
   const { categories } = useCategory();
   const { budgets, sortOrder, fetchBudgets, setSortOrder, deleteBudget, updateBudget } = useBudget();
   const [isEditable, setIsEditable] = useState(false);
@@ -99,7 +100,7 @@ export default function BudgetContainer({ id, category, percentage }: BudgetProp
         {/* Trash/Delete Icon */}
         <FontAwesomeIcon
           icon={faTrash}
-          className="cursor-pointer transition-colors hover:text-[#E57373]"
+          className="cursor-pointer transition-colors hover:text-[#E57373] hover:animate-tilt"
           onMouseEnter={(e) => {
             e.currentTarget.closest(".budget-container")?.classList.add("hover-delete");
           }}
@@ -109,14 +110,18 @@ export default function BudgetContainer({ id, category, percentage }: BudgetProp
           onClick={handleDeleteClick}
         />
       </div>
-      <div className="content-container text-[#323E42] text-center mb-5">
-        <h1 className="title font-bold text-2xl mb-2">{category}</h1>
-        <div
-          className="radial-progress"
-          style={{ "--value": `${percentage}` } as React.CSSProperties}
-          role="progressbar"
-        >
-          {percentage}%
+      <div className="content-container text-gray-800 text-center mb-5 flex justify-center">
+        <div className="flex flex-col items-center gap-5">
+          <h1 className="title font-bold text-2xl mb-2">{category}</h1>
+          <p>${amount}</p>
+          <div
+            className="radial-progress text-[#323E42] transition-transform duration-300 ease-in-out group-hover:scale-110"
+            style={{ "--value": percentage.toString() || 0 } as React.CSSProperties}
+            role="progressbar"
+            data-testid="progress-bar"
+          >
+            {percentage.toFixed(0)}%
+          </div>
         </div>
       </div>
 

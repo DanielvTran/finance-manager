@@ -50,6 +50,7 @@ model Budget {
   categoryId Int?
   User       User      @relation(fields: [userId], references: [id])
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
 }
 
 // Enum for transaction types (income or expense)

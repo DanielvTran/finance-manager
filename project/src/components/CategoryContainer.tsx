@@ -98,7 +98,7 @@ export default function CategoryContainer({ id, title }: CategoryProps) {
         {/* Trash/Delete Icon */}
         <FontAwesomeIcon
           icon={faTrash}
-          className="cursor-pointer transition-colors hover:text-[#E57373]"
+          className="cursor-pointer transition-colors hover:text-[#E57373] hover:animate-tilt"
           onMouseEnter={(e) => {
             e.currentTarget.closest(".category-container")?.classList.add("hover-delete");
           }}
@@ -108,7 +108,7 @@ export default function CategoryContainer({ id, title }: CategoryProps) {
           onClick={handleDeleteClick}
         />
       </div>
-      <div className="content-container text-[#323E42] text-center mb-5">
+      <div className="content-container text-[#323E42] text-center mb-5 transition-transform duration-300 ease-in-out group-hover:scale-110">
         <h1 className="title font-bold text-2xl mb-2">{title}</h1>
       </div>
 

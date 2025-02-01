@@ -118,11 +118,12 @@ export default function Budget() {
           </div>
 
           {sortedBudgets && sortedBudgets.length > 0 ? (
-            <div className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto">
               {sortedBudgets.map((item) => (
                 <BudgetContainer
                   key={item.id}
                   id={item.id}
+                  amount={item.amount}
                   percentage={item.percentage}
                   category={item.category?.name}
                 />

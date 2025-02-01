@@ -35,6 +35,7 @@ export async function GET(req: NextRequest) {
         id: true,
         amount: true,
         categoryId: true,
+        createdAt: true,
         category: {
           select: {
             id: true,
@@ -48,6 +49,8 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "No budgets found for the user" }, { status: 404 });
     }
 
+    console.log(budgets);
+
     // Convert expenses into a lookup table
     const expenseMap = Object.fromEntries(
       expenses
@@ -57,13 +60,11 @@ export async function GET(req: NextRequest) {
 
     // Attach the percentage used to each budget
     const budgetsWithPercentage = budgets.map((budget) => {
-      const totalSpent = expenseMap[budget.categoryId] ?? 0;
+      const totalSpent = budget.categoryId !== null ? expenseMap[budget.categoryId] ?? 0 : 0;
       const percentage = Math.min((totalSpent / budget.amount) * 100, 100); // Cap at 100%
 
       return { ...budget, totalSpent, percentage };
     });
-
-    console.log(budgetsWithPercentage);
 
     // Return categories data
     return NextResponse.json(budgetsWithPercentage, { status: 200 });

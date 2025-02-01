@@ -116,7 +116,7 @@ export default function ExpenseContainer({ id, name, date, amount, category }: E
         {/* Trash/Delete Icon */}
         <FontAwesomeIcon
           icon={faTrash}
-          className="cursor-pointer transition-colors hover:text-[#E57373]"
+          className="cursor-pointer transition-colors hover:text-[#E57373] hover:animate-tilt"
           onMouseEnter={(e) => {
             e.currentTarget.closest(".expense-container")?.classList.add("hover-delete");
           }}
