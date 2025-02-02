@@ -57,9 +57,9 @@ export default function Expense() {
 
     const sorted = [...expenses];
     if (sortOrder === "asc") {
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
+      sorted.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     } else if (sortOrder === "desc") {
-      sorted.sort((a, b) => b.name.localeCompare(a.name));
+      sorted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
     setSortedExpenses(sorted);
   };

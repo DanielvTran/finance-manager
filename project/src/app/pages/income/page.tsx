@@ -30,8 +30,6 @@ export default function Income() {
     fetchCategories();
   }, []);
 
-  console.log("Incomes:", incomes);
-
   useEffect(() => {
     applySorting();
   }, [incomes, sortOrder]);
@@ -57,9 +55,9 @@ export default function Income() {
 
     const sorted = [...incomes];
     if (sortOrder === "asc") {
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
+      sorted.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     } else if (sortOrder === "desc") {
-      sorted.sort((a, b) => b.name.localeCompare(a.name));
+      sorted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
     setSortedIncomes(sorted);
   };
@@ -90,8 +88,6 @@ export default function Income() {
     }
   };
 
-  console.log("Sorted Incomes:", sortedIncomes);
-
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
       <Nav />
@@ -117,8 +113,8 @@ export default function Income() {
                 <option value="" disabled selected>
                   Sort
                 </option>
-                <option value="asc">Ascending</option>
-                <option value="desc">Descending</option>
+                <option value="asc">Oldest to Newest</option>
+                <option value="desc">Newest to Oldest</option>
               </select>
             </div>
           </div>
