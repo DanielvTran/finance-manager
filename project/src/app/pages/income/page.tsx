@@ -10,20 +10,36 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
+// Types
+import { TransactionType, Category } from "@prisma/client";
+
 // Components
 import Nav from "@/components/Nav";
 import IncomeContainer from "@/components/IncomeContainer";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faXmark, faRobot, faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faXmark, faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+
+interface Income {
+  id: number;
+  name: string;
+  amount: number;
+  date: Date;
+  type: TransactionType;
+  categoryId: number;
+  category: Category;
+}
 
 export default function Income() {
   const { incomes, sortOrder, setSortOrder, fetchIncomes, addIncome } = useIncome();
   const { categories, fetchCategories } = useCategory();
 
-  const [sortedIncomes, setSortedIncomes] = useState(incomes || []);
+  const [currentMonthIncomes, setCurrentMonthIncomes] = useState<Income[]>([]);
+  const [olderIncomes, setOlderIncomes] = useState<Income[]>([]);
+
+  const [isPastIncomesVisible, setIsPastIncomesVisible] = useState(false);
 
   useEffect(() => {
     fetchIncomes();
@@ -33,6 +49,27 @@ export default function Income() {
   useEffect(() => {
     applySorting();
   }, [incomes, sortOrder]);
+
+  useEffect(() => {
+    if (!incomes) return;
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+
+    const currentMonthIncomes = incomes.filter((income) => {
+      const incomeDate = new Date(income.date);
+      return incomeDate.getMonth() === currentMonth && incomeDate.getFullYear() === currentYear;
+    });
+
+    const olderIncomes = incomes.filter((income) => {
+      const incomeDate = new Date(income.date);
+      return incomeDate.getMonth() !== currentMonth || incomeDate.getFullYear() !== currentYear;
+    });
+
+    setCurrentMonthIncomes(currentMonthIncomes);
+    setOlderIncomes(olderIncomes);
+  }, [incomes]);
 
   const {
     register,
@@ -51,15 +88,21 @@ export default function Income() {
   });
 
   const applySorting = () => {
-    if (!incomes) return;
+    if (!currentMonthIncomes || !olderIncomes) return;
 
-    const sorted = [...incomes];
+    const sortedCurrentMonth = [...currentMonthIncomes];
+    const sortedOlder = [...olderIncomes];
+
     if (sortOrder === "asc") {
-      sorted.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      sortedCurrentMonth.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      sortedOlder.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     } else if (sortOrder === "desc") {
-      sorted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      sortedCurrentMonth.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      sortedOlder.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
-    setSortedIncomes(sorted);
+
+    setCurrentMonthIncomes(sortedCurrentMonth);
+    setOlderIncomes(sortedOlder);
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -119,25 +162,54 @@ export default function Income() {
             </div>
           </div>
 
-          {sortedIncomes && sortedIncomes.length > 0 ? (
-            <div className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto">
-              {sortedIncomes.map((item) => (
-                <IncomeContainer
-                  key={item.id}
-                  id={item.id}
-                  name={item.name}
-                  date={item.date}
-                  amount={item.amount}
-                  category={item.category?.name}
-                />
-              ))}
+          {/* Current Month Incomes Section */}
+          <div className="income-section">
+            <h2 className="heading flex flex-col font-bold text-xl my-5">Current Month Incomes</h2>
+            <div className="income-list max-h-[300px] overflow-y-auto flex flex-col gap-4">
+              {currentMonthIncomes.length > 0 ? (
+                currentMonthIncomes.map((income) => (
+                  <IncomeContainer
+                    key={income.id}
+                    id={income.id}
+                    name={income.name}
+                    date={income.date}
+                    amount={income.amount}
+                    category={income.category?.name || "Uncategorised"}
+                  />
+                ))
+              ) : (
+                <p>No incomes for the current month.</p>
+              )}
             </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full mt-20">
-              <FontAwesomeIcon icon={faRobot} className="text-4xl mb-4" />
-              <p>No income records available</p>
+          </div>
+
+          {/* Older Incomes Section */}
+          <div className="income-section">
+            <div className="flex items-center cursor-pointer" onClick={() => setIsPastIncomesVisible((prev) => !prev)}>
+              <h2 className="heading flex flex-col font-bold text-xl my-5">Past Incomes</h2>
+              <FontAwesomeIcon icon={isPastIncomesVisible ? faChevronUp : faChevronDown} className="ml-2 text-lg" />
             </div>
-          )}
+
+            {/* Scrollable Container */}
+            {isPastIncomesVisible && (
+              <div className="income-list max-h-[300px] overflow-y-auto flex flex-col gap-4 transition-all duration-300">
+                {olderIncomes.length > 0 ? (
+                  olderIncomes.map((income) => (
+                    <IncomeContainer
+                      key={income.id}
+                      id={income.id}
+                      name={income.name}
+                      date={income.date}
+                      amount={income.amount}
+                      category={income.category?.name || "Uncategorised"}
+                    />
+                  ))
+                ) : (
+                  <p>No older incomes available.</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

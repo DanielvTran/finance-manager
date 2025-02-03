@@ -10,31 +10,66 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
+// Types
+import { TransactionType, Category } from "@prisma/client";
+
 // Components
 import Nav from "@/components/Nav";
 import ExpenseContainer from "@/components/ExpenseContainer";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faXmark, faRobot, faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faXmark, faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+
+interface Expense {
+  id: number;
+  name: string;
+  amount: number;
+  date: Date;
+  type: TransactionType;
+  categoryId: number;
+  category: Category;
+}
 
 export default function Expense() {
   const { expenses, sortOrder, setSortOrder, fetchExpenses, addExpense } = useExpense();
   const { categories, fetchCategories } = useCategory();
 
-  const [sortedExpenses, setSortedExpenses] = useState(expenses || []);
+  const [currentMonthExpenses, setCurrentMonthExpenses] = useState<Expense[]>([]);
+  const [olderExpenses, setOlderExpenses] = useState<Expense[]>([]);
+
+  const [isPastIncomesVisible, setIsPastIncomesVisible] = useState(false);
 
   useEffect(() => {
     fetchExpenses();
     fetchCategories();
   }, []);
 
-  console.log("Expenses:", expenses);
-
   useEffect(() => {
     applySorting();
   }, [expenses, sortOrder]);
+
+  useEffect(() => {
+    if (!expenses) return;
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+
+    const currentMonthExpenses = expenses.filter((expense) => {
+      const expenseDate = new Date(expense.date);
+      return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear;
+    });
+
+    const olderExpenses = expenses.filter((expense) => {
+      const expenseDate = new Date(expense.date);
+      return expenseDate.getMonth() !== currentMonth || expenseDate.getFullYear() !== currentYear;
+    });
+
+    setCurrentMonthExpenses(currentMonthExpenses);
+    setOlderExpenses(olderExpenses);
+  }, [expenses]);
 
   const {
     register,
@@ -53,15 +88,21 @@ export default function Expense() {
   });
 
   const applySorting = () => {
-    if (!expenses) return;
+    if (!currentMonthExpenses || !olderExpenses) return;
 
-    const sorted = [...expenses];
+    const sortedCurrentMonth = [...currentMonthExpenses];
+    const sortedOlder = [...olderExpenses];
+
     if (sortOrder === "asc") {
-      sorted.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      sortedCurrentMonth.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      sortedOlder.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     } else if (sortOrder === "desc") {
-      sorted.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      sortedCurrentMonth.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      sortedOlder.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     }
-    setSortedExpenses(sorted);
+
+    setCurrentMonthExpenses(sortedCurrentMonth);
+    setOlderExpenses(sortedOlder);
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -89,8 +130,6 @@ export default function Expense() {
       console.error("Update error:", error);
     }
   };
-
-  console.log("Sorted Expenses:", sortedExpenses);
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
@@ -123,25 +162,54 @@ export default function Expense() {
             </div>
           </div>
 
-          {sortedExpenses && sortedExpenses.length > 0 ? (
-            <div className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto">
-              {sortedExpenses.map((item) => (
-                <ExpenseContainer
-                  key={item.id}
-                  id={item.id}
-                  name={item.name}
-                  date={item.date}
-                  amount={item.amount}
-                  category={item.category?.name}
-                />
-              ))}
+          {/* Current Month Expense Section */}
+          <div className="income-section">
+            <h2 className="heading flex flex-col font-bold text-xl my-5">Current Month Expense</h2>
+            <div className="income-list max-h-[300px] overflow-y-auto flex flex-col gap-4">
+              {currentMonthExpenses.length > 0 ? (
+                currentMonthExpenses.map((expense) => (
+                  <ExpenseContainer
+                    key={expense.id}
+                    id={expense.id}
+                    name={expense.name}
+                    date={expense.date}
+                    amount={expense.amount}
+                    category={expense.category?.name || "Uncategorised"}
+                  />
+                ))
+              ) : (
+                <p>No expense for the current month.</p>
+              )}
             </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center h-full mt-20">
-              <FontAwesomeIcon icon={faRobot} className="text-4xl mb-4" />
-              <p>No expense records available</p>
+          </div>
+
+          {/* Older Expense Section */}
+          <div className="expense-section">
+            <div className="flex items-center cursor-pointer" onClick={() => setIsPastIncomesVisible((prev) => !prev)}>
+              <h2 className="heading flex flex-col font-bold text-xl my-5">Past Expense</h2>
+              <FontAwesomeIcon icon={isPastIncomesVisible ? faChevronUp : faChevronDown} className="ml-2 text-lg" />
             </div>
-          )}
+
+            {/* Scrollable Container */}
+            {isPastIncomesVisible && (
+              <div className="expense-list max-h-[300px] overflow-y-auto flex flex-col gap-4 transition-all duration-300">
+                {olderExpenses.length > 0 ? (
+                  olderExpenses.map((expense) => (
+                    <ExpenseContainer
+                      key={expense.id}
+                      id={expense.id}
+                      name={expense.name}
+                      date={expense.date}
+                      amount={expense.amount}
+                      category={expense.category?.name || "Uncategorised"}
+                    />
+                  ))
+                ) : (
+                  <p>No older expense available.</p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
