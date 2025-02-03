@@ -88,9 +88,9 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
 
   return (
     <div
-      className={`income-container bg-white p-6 rounded-lg shadow-lg items-center transition-all duration-300 border border-transparent group`}
+      className={`income-container bg-white p-6 rounded-lg shadow-lg items-center transition-all duration-300 border border-transparent group hover:scale-95`}
     >
-      <div className="content-container text-[#323E42] text-center my-5 flex justify-start items-center space-x-10 w-full">
+      <div className="content-container text-[#323E42] text-center my-5 flex justify-start items-center space-x-10 w-full ">
         <h1 className="name font-bold text-2xl w-1/4">{name}</h1>
         {category ? (
           <p className="category font-bold text-2xl w-1/4">{category}</p>
