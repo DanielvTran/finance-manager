@@ -9,6 +9,9 @@ import { useCategory } from "@/contexts/CategoriesContext";
 
 import "react-datepicker/dist/react-datepicker.css";
 
+// Types
+import { Category } from "../../../../lib/types";
+
 // Components
 import Nav from "@/components/Nav";
 import BudgetContainer from "@/components/BudgetContainer";
@@ -23,13 +26,12 @@ export default function Budget() {
   const { categories, fetchCategories } = useCategory();
 
   const [sortedBudgets, setSortedBudgets] = useState(budgets || []);
+  const [availableCategories, setAvailableCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     fetchBudgets();
     fetchCategories();
   }, []);
-
-  console.log("Budgets:", budgets);
 
   useEffect(() => {
     applySorting();
@@ -52,11 +54,19 @@ export default function Budget() {
     if (!budgets) return;
 
     const sorted = [...budgets];
+
     if (sortOrder === "asc") {
-      sorted.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+      // Sort budgets by category name in ascending order
+      sorted.sort((a, b) => {
+        return a.category?.name.localeCompare(b.category?.name);
+      });
     } else if (sortOrder === "desc") {
-      sorted.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      // Sort budgets by category name in descending order
+      sorted.sort((a, b) => {
+        return b.category?.name.localeCompare(a.category?.name);
+      });
     }
+
     setSortedBudgets(sorted);
   };
 
@@ -111,8 +121,8 @@ export default function Budget() {
                 <option value="" disabled selected>
                   Sort
                 </option>
-                <option value="asc">Oldest to Newest</option>
-                <option value="desc">Newest to Oldest</option>
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
               </select>
             </div>
           </div>
@@ -179,7 +189,7 @@ export default function Budget() {
                 <option value="" disabled selected>
                   Select Category
                 </option>
-                {categories?.map((category) => (
+                {availableCategories?.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
                   </option>

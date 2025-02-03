@@ -81,3 +81,8 @@ export enum TransactionType {
   INCOME = "INCOME",
   EXPENSE = "EXPENSE",
 }
+
+export interface Category {
+  id: number;
+  name: string;
+}

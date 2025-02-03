@@ -116,11 +116,11 @@ export default function BudgetContainer({ id, category, amount, percentage }: Bu
           <p>${amount}</p>
           <div
             className="radial-progress text-[#323E42] transition-transform duration-300 ease-in-out group-hover:scale-110"
-            style={{ "--value": percentage.toString() || 0 } as React.CSSProperties}
+            style={{ "--value": (percentage ?? 0).toString() } as React.CSSProperties}
             role="progressbar"
             data-testid="progress-bar"
           >
-            {percentage.toFixed(0)}%
+            {percentage?.toFixed(0)}%
           </div>
         </div>
       </div>
