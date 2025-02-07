@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUserSchema } from "../../../../lib/validationSchema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "@/contexts/UserContext";
 import { IUserSettingsForm } from "../../../../lib/types";
@@ -18,16 +18,19 @@ import Nav from "@/components/Nav";
 
 export default function Settings() {
   const router = useRouter();
-  const { user, loading, error } = useUser();
+  const { user, fetchUser, loading, error } = useUser();
   const [isEditable, setIsEditable] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [deletePrompt, setDeletePrompt] = useState(user?.email);
   const [deleteUserInput, setDeleteUserInput] = useState("");
 
+  // Fetch user data on mount
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   const {
     register,
-    setValue,
-    getValues,
     formState: { errors },
     handleSubmit,
   } = useForm<IUserSettingsForm>({
@@ -36,18 +39,12 @@ export default function Settings() {
       firstName: user?.firstName ?? undefined,
       lastName: user?.lastName ?? undefined,
       email: user?.email ?? undefined,
-      password: user?.password ?? undefined,
+      password: user?.email ?? undefined,
     },
   });
 
   const handleEditClick = () => {
     setIsEditable((prev) => !prev);
-    if (!isEditable) {
-      setValue("firstName", getValues("firstName"));
-      setValue("lastName", getValues("lastName"));
-      setValue("email", getValues("email"));
-      setValue("password", getValues("password"));
-    }
   };
 
   const handleDeleteClick = async () => {
@@ -179,7 +176,7 @@ export default function Settings() {
                 <input
                   {...register("password")}
                   readOnly={!isEditable}
-                  placeholder={errors.password ? errors.password.message : "Password"}
+                  placeholder="Enter new password"
                   type="password"
                   className={`w-fit pl-5 py-5 rounded-xl pr-2 bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
                     errors.password ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"

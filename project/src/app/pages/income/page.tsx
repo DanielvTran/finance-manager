@@ -19,7 +19,7 @@ import IncomeContainer from "@/components/IncomeContainer";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faXmark, faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faXmark, faChevronUp, faChevronDown, faRobot } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 
 interface Income {
@@ -178,7 +178,10 @@ export default function Income() {
                   />
                 ))
               ) : (
-                <p>No incomes for the current month.</p>
+                <div className="flex flex-col items-center justify-center h-full mt-20">
+                  <FontAwesomeIcon icon={faRobot} className="text-4xl mb-4" />
+                  <p>No income records for this month</p>
+                </div>
               )}
             </div>
           </div>
@@ -205,7 +208,10 @@ export default function Income() {
                     />
                   ))
                 ) : (
-                  <p>No older incomes available.</p>
+                  <div className="flex flex-col items-center justify-center h-full mt-20">
+                    <FontAwesomeIcon icon={faRobot} className="text-4xl mb-4" />
+                    <p>No past income records available</p>
+                  </div>
                 )}
               </div>
             )}
@@ -281,7 +287,7 @@ export default function Income() {
                   errors.categoryId ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                 }`}
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Select Category
                 </option>
                 {categories?.map((category) => (

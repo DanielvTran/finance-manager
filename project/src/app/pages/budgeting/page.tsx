@@ -37,6 +37,14 @@ export default function Budget() {
     applySorting();
   }, [budgets, sortOrder]);
 
+  useEffect(() => {
+    if (categories && budgets) {
+      const usedCategoryIds = new Set(budgets.map((budget) => budget.categoryId));
+      const filteredCategories = categories.filter((category) => !usedCategoryIds.has(category.id));
+      setAvailableCategories(filteredCategories);
+    }
+  }, [categories, budgets]);
+
   const {
     register,
     formState: { errors },
@@ -186,7 +194,7 @@ export default function Budget() {
                   errors.categoryId ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                 }`}
               >
-                <option value="" disabled selected>
+                <option value="" disabled>
                   Select Category
                 </option>
                 {availableCategories?.map((category) => (

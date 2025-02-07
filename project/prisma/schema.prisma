@@ -16,7 +16,7 @@ model User {
   password     String
   transactions Transaction[]
   budgets      Budget[]
-  category     Category[]
+  categories   Category[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -25,7 +25,7 @@ model Category {
   id           Int           @id @default(autoincrement())
   name         String
   userId       Int
-  User         User          @relation(fields: [userId], references: [id])
+  User         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   transactions Transaction[]
   budgets      Budget[]
 }
@@ -38,7 +38,7 @@ model Transaction {
   type       TransactionType
   userId     Int
   categoryId Int?
-  User       User            @relation(fields: [userId], references: [id])
+  User       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   category   Category?       @relation(fields: [categoryId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   createdAt  DateTime        @default(now())
 }
@@ -48,7 +48,7 @@ model Budget {
   amount     Float
   userId     Int
   categoryId Int?
-  User       User      @relation(fields: [userId], references: [id])
+  User       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   createdAt  DateTime  @default(now())
 }

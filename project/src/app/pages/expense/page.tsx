@@ -19,7 +19,7 @@ import ExpenseContainer from "@/components/ExpenseContainer";
 
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faXmark, faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faXmark, faChevronUp, faChevronDown, faRobot } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 
 interface Expense {
@@ -178,7 +178,10 @@ export default function Expense() {
                   />
                 ))
               ) : (
-                <p>No expense for the current month.</p>
+                <div className="flex flex-col items-center justify-center h-full mt-20">
+                  <FontAwesomeIcon icon={faRobot} className="text-4xl mb-4" />
+                  <p>No income records for this month</p>
+                </div>
               )}
             </div>
           </div>
@@ -205,7 +208,10 @@ export default function Expense() {
                     />
                   ))
                 ) : (
-                  <p>No older expense available.</p>
+                  <div className="flex flex-col items-center justify-center h-full mt-20">
+                    <FontAwesomeIcon icon={faRobot} className="text-4xl mb-4" />
+                    <p>No past expense records available</p>
+                  </div>
                 )}
               </div>
             )}

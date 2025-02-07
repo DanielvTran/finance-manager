@@ -48,6 +48,10 @@ export default function Login() {
         <div className="left-content p-6 md:p-10 lg:p-12">
           <h1 className="heading text-[#98FF98] font-bold text-4xl lg:text-5xl mb-4 lg:mb-10">LOGIN</h1>
           <p>joshwong@gmail.com</p>
+          <p>danieltran@gmail.com</p>
+          <p> jacksib@gmail.com</p>
+          <p> kim@gmail.com</p>
+          <p>c3aRc?H4CQ9Yxq#T</p>
           <p>fjdkslF(9</p>
           <form onSubmit={handleSubmit(onSubmit)} className="bg-[#323E42] space-y-4 rounded-lg mb-5">
             <input

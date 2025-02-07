@@ -7,12 +7,14 @@ export async function DELETE(req: NextRequest) {
     // Get the token from cookies
     const token = req.cookies.get("accessToken")?.value;
 
+    console.log("Access Token:", token);
+
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Verify the token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: number };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_ACCESS as string) as { id: number };
 
     // Fetch user data from the database
     const user = await prisma.user.findUnique({
@@ -25,6 +27,8 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
+    console.log("User found:", user);
+
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -34,6 +38,8 @@ export async function DELETE(req: NextRequest) {
       where: { id: decoded.id },
       select: { id: true, email: true, firstName: true, lastName: true },
     });
+
+    console.log("Deleted user:", deletedUser);
 
     // Expire the token
     const response = NextResponse.json({ message: "User deleted successfully", deletedUser }, { status: 200 });
