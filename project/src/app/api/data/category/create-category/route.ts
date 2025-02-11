@@ -15,11 +15,14 @@ export async function POST(req: NextRequest) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_ACCESS as string) as { id: number };
 
     // Parse the request body to get the category name
-    const { name, description } = await req.json();
+    let { name } = await req.json();
 
     if (!name) {
       return NextResponse.json({ error: "Category name is required" }, { status: 400 });
     }
+
+    // Make sure first letter is uppercase and the rest are lowercase
+    name = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
     // Check if a category with the same name already exists for the user
     const existingCategory = await prisma.category.findFirst({
@@ -37,14 +40,15 @@ export async function POST(req: NextRequest) {
     const newCategory = await prisma.category.create({
       data: {
         name,
-        description,
         userId: decoded.id,
       },
     });
 
     // Return the created category
     return NextResponse.json(newCategory, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
   }
 }

@@ -9,8 +9,8 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
-  console.log("Middleware - Access Token:", accessToken);
-  console.log("Middleware - Refresh Token:", refreshToken);
+  // console.log("Middleware - Access Token:", accessToken);
+  // console.log("Middleware - Refresh Token:", refreshToken);
 
   if (!accessToken && !refreshToken) {
     console.log("No tokens found, redirecting to login");

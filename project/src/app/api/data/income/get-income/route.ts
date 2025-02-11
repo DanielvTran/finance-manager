@@ -27,11 +27,10 @@ export async function GET(req: NextRequest) {
         date: true,
         type: true,
         categoryId: true,
-        Category: {
+        category: {
           select: {
             id: true,
             name: true,
-            description: true,
           },
         },
       },
@@ -43,7 +42,9 @@ export async function GET(req: NextRequest) {
 
     // Return categories data
     return NextResponse.json(incomes, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
   }
 }

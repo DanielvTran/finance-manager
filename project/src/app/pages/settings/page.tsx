@@ -1,12 +1,10 @@
 "use client";
 
-import { links } from "../../../../lib";
-import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateUserSchema } from "../../../../lib/validationSchema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "@/contexts/UserContext";
 import { IUserSettingsForm } from "../../../../lib/types";
@@ -15,19 +13,24 @@ import { IUserSettingsForm } from "../../../../lib/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical, faTrash } from "@fortawesome/free-solid-svg-icons";
 
+// Components
+import Nav from "@/components/Nav";
+
 export default function Settings() {
   const router = useRouter();
-  const pathname = usePathname();
-  const { user, loading, error } = useUser();
+  const { user, fetchUser } = useUser();
   const [isEditable, setIsEditable] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [deletePrompt, setDeletePrompt] = useState(user?.email);
+  const [deletePrompt] = useState(user?.email);
   const [deleteUserInput, setDeleteUserInput] = useState("");
+
+  // Fetch user data on mount
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const {
     register,
-    setValue,
-    getValues,
     formState: { errors },
     handleSubmit,
   } = useForm<IUserSettingsForm>({
@@ -36,18 +39,12 @@ export default function Settings() {
       firstName: user?.firstName ?? undefined,
       lastName: user?.lastName ?? undefined,
       email: user?.email ?? undefined,
-      password: user?.password ?? undefined,
+      password: user?.email ?? undefined,
     },
   });
 
   const handleEditClick = () => {
     setIsEditable((prev) => !prev);
-    if (!isEditable) {
-      setValue("firstName", getValues("firstName"));
-      setValue("lastName", getValues("lastName"));
-      setValue("email", getValues("email"));
-      setValue("password", getValues("password"));
-    }
   };
 
   const handleDeleteClick = async () => {
@@ -75,27 +72,7 @@ export default function Settings() {
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
-      <div className="left-container w-full lg:w-1/5 bg-[#323E42] flex justify-center min-h-screen py-20">
-        <div className="left-content">
-          <h1 className="heading text-[#98FF98] font-bold text-3xl lg:text-4xl mb-3 lg:mb-20">MintyPlan</h1>
-
-          <nav className="space-y-4 lg:space-y-8 xl:space-y-10 2xl:space-y-12 font-bold">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-xl md:text-2xl lg:text-3xl block transition ${
-                  pathname === link.href
-                    ? "text-[#98FF98] border-r-4 border-[#98FF98] pr-2"
-                    : "text-[#DFFFE2] hover:text-[#98FF98]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
+      <Nav />
 
       <div className="right-container w-full lg:w-4/5 bg-[#F2F2F2] flex min-h-screen py-20 px-20">
         <div className="max-w-sm lg:max-w-md xl:max-w-lg 2xl:max-w-2xl 3xl:max-w-3xl">
@@ -108,8 +85,8 @@ export default function Settings() {
                   errors.firstName
                     ? "border-[#E57373] border-2"
                     : isEditable
-                    ? "border-[#E5B973] border-[2px]"
-                    : "border-gray-300"
+                      ? "border-[#E5B973] border-[2px]"
+                      : "border-gray-300"
                 } `}
               >
                 <input
@@ -136,8 +113,8 @@ export default function Settings() {
                   errors.lastName
                     ? "border-[#E57373] border-2"
                     : isEditable
-                    ? "border-[#E5B973] border-[2px]"
-                    : "border-gray-300"
+                      ? "border-[#E5B973] border-[2px]"
+                      : "border-gray-300"
                 } `}
               >
                 <input
@@ -164,8 +141,8 @@ export default function Settings() {
                   errors.email
                     ? "border-[#E57373] border-2"
                     : isEditable
-                    ? "border-[#E5B973] border-[2px]"
-                    : "border-gray-300"
+                      ? "border-[#E5B973] border-[2px]"
+                      : "border-gray-300"
                 } `}
               >
                 <input
@@ -192,14 +169,14 @@ export default function Settings() {
                   errors.password
                     ? "border-[#E57373] border-2"
                     : isEditable
-                    ? "border-[#E5B973] border-[2px]"
-                    : "border-gray-300"
+                      ? "border-[#E5B973] border-[2px]"
+                      : "border-gray-300"
                 } `}
               >
                 <input
                   {...register("password")}
                   readOnly={!isEditable}
-                  placeholder={errors.password ? errors.password.message : "Password"}
+                  placeholder="Enter new password"
                   type="password"
                   className={`w-fit pl-5 py-5 rounded-xl pr-2 bg-[#ffffff] font-bold text-[#3A6F66] focus:outline-none ${
                     errors.password ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
@@ -248,9 +225,9 @@ export default function Settings() {
                   >
                     ✕
                   </button>
-                  <p className="py-4 text-[#3A6F66] text-lg">
-                    Please enter this text to delete your account{" "}
-                    <span className="text-[#E57373] font-semibold">'{deletePrompt}'</span>
+                  <p className="py-4 text-[#ffffff] text-lg">
+                    <p>Please enter this text to delete your account</p>
+                    <span className="text-[#E57373] font-semibold">&apos;{deletePrompt}&apos;</span>
                   </p>
                   <input
                     type="text"
@@ -259,7 +236,7 @@ export default function Settings() {
                     onChange={(e) => {
                       setDeleteUserInput(e.target.value);
                     }}
-                    className="input input-bordered w-full mt-2 border-[#D9D9D9] focus:border-[#98FF98] placeholder:text-[#3A6F66]"
+                    className="input input-bordered w-full mt-2 border-[#D9D9D9] focus:border-[#98FF98] text-[#ffffff] placeholder:text-[#ffffff]"
                   />
                   <div className="modal-action">
                     <button

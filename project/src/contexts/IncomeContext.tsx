@@ -41,8 +41,13 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
     setError(null);
     try {
       const response = await axios.get("/api/data/income/get-income", { withCredentials: true });
-      setIncomes(response.data.sort((a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name)));
-    } catch (err) {
+
+      const sortedIncomes = response.data.sort(
+        (a: { date: string }, b: { date: string }) => new Date(a.date).getTime() - new Date(b.date).getTime()
+      );
+
+      setIncomes(sortedIncomes);
+    } catch {
       setError("Failed to load incomes");
       setIncomes([]);
     } finally {
@@ -54,25 +59,28 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await axios.post("/api/data/income/create-income", data, { withCredentials: true });
       setIncomes((prev) => (prev ? [...prev, response.data] : [response.data]));
-    } catch (err) {
+      await fetchIncomes();
+    } catch {
       setError("Failed to add income");
     }
   };
 
   const deleteIncome = async (id: number) => {
     try {
-      await axios.delete(`/api/data/delete-income/${id}`, { withCredentials: true });
+      await axios.delete(`/api/data/income/delete-income/${id}`, { withCredentials: true });
       setIncomes((prev) => prev?.filter((income) => income.id !== id) ?? []);
-    } catch (err) {
+      await fetchIncomes();
+    } catch {
       setError("Failed to delete income");
     }
   };
 
   const updateIncome = async (id: number, data: Partial<Income>) => {
     try {
-      const response = await axios.put(`/api/data/update-income/${id}`, data, { withCredentials: true });
+      const response = await axios.put(`/api/data/income/update-income/${id}`, data, { withCredentials: true });
       setIncomes((prev) => prev?.map((income) => (income.id === id ? { ...income, ...response.data } : income)) ?? []);
-    } catch (err) {
+      await fetchIncomes();
+    } catch {
       setError("Failed to update income");
     }
   };

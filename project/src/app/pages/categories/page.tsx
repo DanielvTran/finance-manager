@@ -1,22 +1,22 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { links } from "../../../../lib";
 import { useCategory } from "@/contexts/CategoriesContext";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { categorySchema } from "../../../../lib/validationSchema";
 import { ICategoriesForm } from "../../../../lib/types";
 
+// Components
+import Nav from "@/components/Nav";
+
 // Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faXmark, faRobot } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import Category from "@/components/Category";
+import CategoryContainer from "@/components/CategoryContainer";
 
 export default function Categories() {
-  const { categories, sortOrder, setSortOrder, fetchCategories, addCategory, updateCategory } = useCategory();
+  const { categories, sortOrder, setSortOrder, fetchCategories, addCategory } = useCategory();
   const [sortedCategories, setSortedCategories] = useState(categories || []);
 
   useEffect(() => {
@@ -26,10 +26,6 @@ export default function Categories() {
   useEffect(() => {
     applySorting();
   }, [categories, sortOrder]);
-
-  console.log("Categories on mount:", categories);
-
-  const pathname = usePathname();
 
   const {
     register,
@@ -42,7 +38,6 @@ export default function Categories() {
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: "",
-      description: "",
     },
   });
 
@@ -65,14 +60,12 @@ export default function Categories() {
   const onSubmitAdd: SubmitHandler<ICategoriesForm> = async (data) => {
     try {
       setValue("name", getValues("name"));
-      setValue("description", getValues("description"));
 
       const response = await addCategory(data);
       console.log("Categories after add:", categories);
 
       reset({
         name: "",
-        description: "",
       });
 
       const modal = document.getElementById("add_categories_modal") as HTMLDialogElement | null;
@@ -87,27 +80,7 @@ export default function Categories() {
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">
-      <div className="left-container w-full lg:w-1/5 bg-[#323E42] flex justify-center min-h-screen py-20">
-        <div className="left-content">
-          <h1 className="heading text-[#98FF98] font-bold text-3xl lg:text-4xl mb-3 lg:mb-20">MintyPlan</h1>
-
-          <nav className="space-y-4 lg:space-y-8 xl:space-y-10 2xl:space-y-12 font-bold">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-xl md:text-2xl lg:text-3xl block transition ${
-                  pathname === link.href
-                    ? "text-[#98FF98] border-r-4 border-[#98FF98] pr-2"
-                    : "text-[#DFFFE2] hover:text-[#98FF98]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-        </div>
-      </div>
+      <Nav />
 
       <div className="right-container text-[#323E42] w-full lg:w-4/5 bg-[#F2F2F2] flex flex-col min-h-screen py-20 px-20">
         <h1 className=" font-bold text-3xl lg:text-4xl text-left mb-10">Personalise your categories!</h1>
@@ -139,7 +112,7 @@ export default function Categories() {
           {sortedCategories && sortedCategories.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-h-[50vh] overflow-y-auto">
               {sortedCategories.map((item) => (
-                <Category key={item.id} id={item.id} title={item.name} description={item.description} />
+                <CategoryContainer key={item.id} id={item.id} title={item.name} />
               ))}
             </div>
           ) : (
@@ -180,16 +153,6 @@ export default function Categories() {
                 type="text"
                 className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
                   errors.name ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
-                }`}
-              />
-
-              {/* Description Input */}
-              <input
-                {...register("description")}
-                placeholder={errors.description ? errors.description.message : "Description"}
-                type="text"
-                className={`w-full border-2 border-[#D9D9D9] py-5 px-4 rounded-xl bg-[#ffffff] font-bold text-[#323E42] focus:outline-none focus:border-[#323E42] ${
-                  errors.description ? "placeholder:font-bold placeholder:text-[#E57373]" : "placeholder:text-[#D9D9D9]"
                 }`}
               />
 

@@ -17,6 +17,8 @@ export async function POST(req: NextRequest) {
     // Parse the request body to get transaction details
     const { name, amount, date, categoryId } = await req.json();
 
+    console.log("Request body:", { name, amount, date, categoryId });
+
     // Validate required fields
     if (!name || !amount || !categoryId) {
       return NextResponse.json({ error: "Name, Amount, and CategoryID are required" }, { status: 400 });
@@ -43,6 +45,9 @@ export async function POST(req: NextRequest) {
         type: "INCOME",
         userId: decoded.id,
         categoryId,
+      },
+      include: {
+        category: true,
       },
     });
 

@@ -23,7 +23,7 @@ export async function PUT(req: NextRequest) {
     }
 
     // Parse the request body to get the category name
-    const { name, description } = await req.json();
+    const { name } = await req.json();
 
     if (!name) {
       return NextResponse.json({ error: "Category name is required" }, { status: 400 });
@@ -46,13 +46,14 @@ export async function PUT(req: NextRequest) {
       where: { id },
       data: {
         ...(name && { name }),
-        ...(description && { description }),
       },
     });
 
     // Return the created category
     return NextResponse.json(updatedCategory, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
   }
 }

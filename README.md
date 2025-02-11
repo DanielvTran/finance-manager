@@ -38,7 +38,7 @@
 
 ---
 
-## Milestone 2: Database Design and Implementation (Days 1-2)
+## Milestone 2: Database Design and Implementation
 
 **Goal**: Design the database schema in MySQL Workbench and set up the database.
 
@@ -61,7 +61,7 @@
 
 ---
 
-## Milestone 3: User Authentication (Days 3-4)
+## Milestone 3: User Authentication
 
 **Goal**: Implement user authentication and secure access to the application.
 
@@ -81,84 +81,46 @@
 
 ---
 
-## Milestone 4: Income and Expense Tracking (Days 5-6)
+## Milestone 4: Income and Expense Tracking
 
 **Goal**: Implement core features for adding, viewing, editing, and deleting transactions.
 
-- [ ] **API Endpoints for Transactions**
+- [x] **API Endpoints for Transactions**
 
-  - [ ] Set up CRUD API routes for transactions (`api/transactions`).
-  - [ ] Define endpoints for creating, reading, updating, and deleting transactions.
+  - [x] Set up CRUD API routes for transactions (`api/transactions`).
+  - [x] Define endpoints for creating, reading, updating, and deleting transactions.
 
-- [ ] **Create Transaction Page**
+- [x] **Create Transaction Page**
 
-  - [ ] Build a form with fields for date, category, amount, and type (income or expense).
-  - [ ] Use a dropdown to select the category and radio buttons to choose between income and expense.
+  - [x] Build a form with fields for date, category, amount, and type (income or expense).
+  - [x] Use a dropdown to select the category and radio buttons to choose between income and expense.
 
-- [ ] **Transaction List Component**
-  - [ ] Create a component that displays a list of all transactions, showing details like date, amount, category, and type.
-  - [ ] Add edit and delete buttons next to each transaction.
+- [x] **Transaction List Component**
+  - [x] Create a component that displays a list of all transactions, showing details like date, amount, category, and type.
+  - [x] Add edit and delete buttons next to each transaction.
 
 ---
 
-## Milestone 5: Budgeting Module (Days 7-8)
+## Milestone 5: Budgeting Module
 
 **Goal**: Implement budget setting and tracking functionality.
 
-- [ ] **API Endpoints for Budgets**
+- [x] **API Endpoints for Budgets**
 
-  - [ ] Create API routes for setting, updating, and retrieving budget information.
+  - [x] Create API routes for setting, updating, and retrieving budget information.
 
-- [ ] **Set Budget UI**
+- [x] **Set Budget UI**
 
-  - [ ] Create a form for users to set budgets for specific categories (e.g., food, transportation).
-  - [ ] Allow users to enter a monthly or weekly budget amount for each category.
+  - [x] Create a form for users to set budgets for specific categories (e.g., food, transportation).
+  - [x] Allow users to enter a monthly or weekly budget amount for each category.
 
-- [ ] **Display Budget Progress**
-  - [ ] Create a dashboard component to show the budget usage per category.
-  - [ ] Highlight categories that have exceeded the budget in red or another warning color.
-
----
-
-## Milestone 6: Financial Summary and Reporting (Days 9-10)
-
-**Goal**: Provide users with a summary and data visualization tools.
-
-- [ ] **Monthly and Yearly Summary**
-
-  - [ ] Implement API routes to fetch monthly and yearly summaries of income and expenses.
-
-- [ ] **Create Summary Page**
-
-  - [ ] Build a summary page displaying total income and expenses for the selected time period (e.g., monthly, yearly).
-  - [ ] Use charts to show income vs. expenses over time.
-
-- [ ] **Data Visualization**
-
-  - [ ] Integrate Chart.js or a Svelte-compatible chart library to display bar charts or pie charts.
-  - [ ] Visualize data for better understanding of spending patterns and budget usage.
-
-- [ ] **Export Reports**
-  - [ ] Implement a feature to export the financial data in CSV or PDF format.
+- [x] **Display Budget Progress**
+  - [x] Create a dashboard component to show the budget usage per category.
+  - [x] Highlight categories that have exceeded the budget in red or another warning color.
 
 ---
 
-## Milestone 7: Optional Features (Days 11-12)
-
-**Goal**: Add additional features to enhance user experience.
-
-- [ ] **Recurring Transactions**
-
-  - [ ] Add a feature to set up recurring transactions for regular income or expenses (e.g., monthly rent, salary).
-  - [ ] Create a job or logic to auto-generate recurring transactions.
-
-- [ ] **Notifications**
-  - [ ] Implement notifications or alerts when users are close to reaching their budget limit.
-  - [ ] Use toast messages or modal dialogs to display these alerts.
-
----
-
-## Milestone 8: Finalization and Deployment (Days 13-14)
+## Milestone 6: Finalization and Deployment
 
 **Goal**: Test, document, and deploy the application.
 
@@ -181,13 +143,11 @@
 
 ## Summary of Milestones and Timeline
 
-1. **Milestone 1 (Day 1)**: Project setup and structure.
-2. **Milestone 2 (Days 1-2)**: Database design and setup.
-3. **Milestone 3 (Days 3-4)**: User authentication.
-4. **Milestone 4 (Days 5-6)**: Income and expense tracking.
-5. **Milestone 5 (Days 7-8)**: Budgeting module.
-6. **Milestone 6 (Days 9-10)**: Financial summary and data visualization.
-7. **Milestone 7 (Days 11-12)**: Optional features (recurring transactions and notifications).
-8. **Milestone 8 (Days 13-14)**: Finalization, testing, documentation, and deployment.
+1. **Milestone 1**: Project setup and structure.
+2. **Milestone 2**: Database design and setup.
+3. **Milestone 3**: User authentication.
+4. **Milestone 4**: Income and expense tracking.
+5. **Milestone 5**: Budgeting module.
+6. **Milestone 6**: Finalization, testing, documentation, and deployment.
 
 ---

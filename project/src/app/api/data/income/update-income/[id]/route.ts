@@ -14,45 +14,64 @@ export async function PUT(req: NextRequest) {
     // Verify the token and extract the user ID
     const decoded = jwt.verify(token, process.env.JWT_SECRET_ACCESS as string) as { id: number };
 
-    // Extract the category ID from the URL
+    // Extract the income ID from the URL
     const url = new URL(req.url);
     const id = Number(url.pathname.split("/").pop());
 
     if (!id) {
-      return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
+      return NextResponse.json({ error: "Income ID is required" }, { status: 400 });
     }
 
-    // Parse the request body to get the category name
-    const { name, description } = await req.json();
+    // Parse the request body to get the income name, date, amount, and category ID
+    const { name, amount, date, categoryId } = await req.json();
 
     if (!name) {
       return NextResponse.json({ error: "Category name is required" }, { status: 400 });
     }
 
-    // Find the category to ensure it exists and belongs to the authenticated user
-    const existingCategory = await prisma.category.findFirst({
+    if (!amount) {
+      return NextResponse.json({ error: "Amount is required" }, { status: 400 });
+    }
+
+    if (!date) {
+      return NextResponse.json({ error: "Date is required" }, { status: 400 });
+    }
+
+    if (!categoryId) {
+      return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
+    }
+
+    console.log("Request body:", { name, amount, date, categoryId });
+
+    // Find the income to ensure it exists and belongs to the authenticated user
+    const existingIncome = await prisma.transaction.findFirst({
       where: {
         id,
         userId: decoded.id,
+        type: "INCOME",
       },
     });
 
-    if (!existingCategory) {
-      return NextResponse.json({ error: "Category not found or unauthorized access" }, { status: 404 });
+    if (!existingIncome) {
+      return NextResponse.json({ error: "Income not found or unauthorized access" }, { status: 404 });
     }
 
-    // Update the category with the provided fields
-    const updatedCategory = await prisma.category.update({
+    // Update the income with the provided fields
+    const updatedIncome = await prisma.transaction.update({
       where: { id },
       data: {
         ...(name && { name }),
-        ...(description && { description }),
+        ...(amount && { amount }),
+        ...(date && { date }),
+        ...(categoryId && { categoryId }),
       },
     });
 
-    // Return the created category
-    return NextResponse.json(updatedCategory, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+    // Return the created income
+    return NextResponse.json(updatedIncome, { status: 201 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
   }
 }
