@@ -85,19 +85,19 @@
 
 **Goal**: Implement core features for adding, viewing, editing, and deleting transactions.
 
-- [ ] **API Endpoints for Transactions**
+- [x] **API Endpoints for Transactions**
 
-  - [ ] Set up CRUD API routes for transactions (`api/transactions`).
-  - [ ] Define endpoints for creating, reading, updating, and deleting transactions.
+  - [x] Set up CRUD API routes for transactions (`api/transactions`).
+  - [x] Define endpoints for creating, reading, updating, and deleting transactions.
 
-- [ ] **Create Transaction Page**
+- [x] **Create Transaction Page**
 
-  - [ ] Build a form with fields for date, category, amount, and type (income or expense).
-  - [ ] Use a dropdown to select the category and radio buttons to choose between income and expense.
+  - [x] Build a form with fields for date, category, amount, and type (income or expense).
+  - [x] Use a dropdown to select the category and radio buttons to choose between income and expense.
 
-- [ ] **Transaction List Component**
-  - [ ] Create a component that displays a list of all transactions, showing details like date, amount, category, and type.
-  - [ ] Add edit and delete buttons next to each transaction.
+- [x] **Transaction List Component**
+  - [x] Create a component that displays a list of all transactions, showing details like date, amount, category, and type.
+  - [x] Add edit and delete buttons next to each transaction.
 
 ---
 
@@ -105,18 +105,18 @@
 
 **Goal**: Implement budget setting and tracking functionality.
 
-- [ ] **API Endpoints for Budgets**
+- [x] **API Endpoints for Budgets**
 
-  - [ ] Create API routes for setting, updating, and retrieving budget information.
+  - [x] Create API routes for setting, updating, and retrieving budget information.
 
-- [ ] **Set Budget UI**
+- [x] **Set Budget UI**
 
-  - [ ] Create a form for users to set budgets for specific categories (e.g., food, transportation).
-  - [ ] Allow users to enter a monthly or weekly budget amount for each category.
+  - [x] Create a form for users to set budgets for specific categories (e.g., food, transportation).
+  - [x] Allow users to enter a monthly or weekly budget amount for each category.
 
-- [ ] **Display Budget Progress**
-  - [ ] Create a dashboard component to show the budget usage per category.
-  - [ ] Highlight categories that have exceeded the budget in red or another warning color.
+- [x] **Display Budget Progress**
+  - [x] Create a dashboard component to show the budget usage per category.
+  - [x] Highlight categories that have exceeded the budget in red or another warning color.
 
 ---
 
@@ -143,22 +143,7 @@
 
 ---
 
-## Milestone 7: Optional Features
-
-**Goal**: Add additional features to enhance user experience.
-
-- [ ] **Recurring Transactions**
-
-  - [ ] Add a feature to set up recurring transactions for regular income or expenses (e.g., monthly rent, salary).
-  - [ ] Create a job or logic to auto-generate recurring transactions.
-
-- [ ] **Notifications**
-  - [ ] Implement notifications or alerts when users are close to reaching their budget limit.
-  - [ ] Use toast messages or modal dialogs to display these alerts.
-
----
-
-## Milestone 8: Finalization and Deployment
+## Milestone 7: Finalization and Deployment
 
 **Goal**: Test, document, and deploy the application.
 
@@ -187,7 +172,6 @@
 4. **Milestone 4**: Income and expense tracking.
 5. **Milestone 5**: Budgeting module.
 6. **Milestone 6**: Financial summary and data visualization.
-7. **Milestone 7**: Optional features (recurring transactions and notifications).
-8. **Milestone 8**: Finalization, testing, documentation, and deployment.
+7. **Milestone 7**: Finalization, testing, documentation, and deployment.
 
 ---
