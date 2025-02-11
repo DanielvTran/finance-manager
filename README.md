@@ -38,7 +38,7 @@
 
 ---
 
-## Milestone 2: Database Design and Implementation (Days 1-2)
+## Milestone 2: Database Design and Implementation
 
 **Goal**: Design the database schema in MySQL Workbench and set up the database.
 
@@ -61,7 +61,7 @@
 
 ---
 
-## Milestone 3: User Authentication (Days 3-4)
+## Milestone 3: User Authentication
 
 **Goal**: Implement user authentication and secure access to the application.
 
@@ -81,7 +81,7 @@
 
 ---
 
-## Milestone 4: Income and Expense Tracking (Days 5-6)
+## Milestone 4: Income and Expense Tracking
 
 **Goal**: Implement core features for adding, viewing, editing, and deleting transactions.
 
@@ -101,7 +101,7 @@
 
 ---
 
-## Milestone 5: Budgeting Module (Days 7-8)
+## Milestone 5: Budgeting Module
 
 **Goal**: Implement budget setting and tracking functionality.
 
@@ -120,7 +120,7 @@
 
 ---
 
-## Milestone 6: Financial Summary and Reporting (Days 9-10)
+## Milestone 6: Financial Summary and Reporting
 
 **Goal**: Provide users with a summary and data visualization tools.
 
@@ -143,7 +143,7 @@
 
 ---
 
-## Milestone 7: Optional Features (Days 11-12)
+## Milestone 7: Optional Features
 
 **Goal**: Add additional features to enhance user experience.
 
@@ -158,7 +158,7 @@
 
 ---
 
-## Milestone 8: Finalization and Deployment (Days 13-14)
+## Milestone 8: Finalization and Deployment
 
 **Goal**: Test, document, and deploy the application.
 
@@ -181,13 +181,13 @@
 
 ## Summary of Milestones and Timeline
 
-1. **Milestone 1 (Day 1)**: Project setup and structure.
-2. **Milestone 2 (Days 1-2)**: Database design and setup.
-3. **Milestone 3 (Days 3-4)**: User authentication.
-4. **Milestone 4 (Days 5-6)**: Income and expense tracking.
-5. **Milestone 5 (Days 7-8)**: Budgeting module.
-6. **Milestone 6 (Days 9-10)**: Financial summary and data visualization.
-7. **Milestone 7 (Days 11-12)**: Optional features (recurring transactions and notifications).
-8. **Milestone 8 (Days 13-14)**: Finalization, testing, documentation, and deployment.
+1. **Milestone 1**: Project setup and structure.
+2. **Milestone 2**: Database design and setup.
+3. **Milestone 3**: User authentication.
+4. **Milestone 4**: Income and expense tracking.
+5. **Milestone 5**: Budgeting module.
+6. **Milestone 6**: Financial summary and data visualization.
+7. **Milestone 7**: Optional features (recurring transactions and notifications).
+8. **Milestone 8**: Finalization, testing, documentation, and deployment.
 
 ---

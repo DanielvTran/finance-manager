@@ -17,7 +17,7 @@ interface CategoryProps {
 }
 
 export default function CategoryContainer({ id, title }: CategoryProps) {
-  const { categories, sortOrder, setSortOrder, deleteCategory, updateCategory } = useCategory();
+  const { categories, deleteCategory, updateCategory } = useCategory();
   const [isEditable, setIsEditable] = useState(false);
   const [isRemovable, setIsRemovable] = useState(false);
 

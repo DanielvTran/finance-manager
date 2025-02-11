@@ -70,7 +70,7 @@ export async function GET(req: NextRequest) {
 
     // Attach the percentage used to each budget
     const budgetsWithPercentage = budgets.map((budget) => {
-      const totalSpent = budget.categoryId !== null ? expenseMap[budget.categoryId] ?? 0 : 0;
+      const totalSpent = budget.categoryId !== null ? (expenseMap[budget.categoryId] ?? 0) : 0;
       const percentage = (totalSpent / budget.amount) * 100;
 
       return { ...budget, totalSpent, percentage };
@@ -78,7 +78,9 @@ export async function GET(req: NextRequest) {
 
     // Return categories data
     return NextResponse.json(budgetsWithPercentage, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
   }
 }

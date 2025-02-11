@@ -58,7 +58,9 @@ export async function PUT(req: NextRequest) {
 
     // Return the updated budget
     return NextResponse.json(updatedBudget, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
   }
 }

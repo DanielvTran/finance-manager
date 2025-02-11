@@ -13,11 +13,14 @@ export default function Nav() {
   const { logoutUser } = useUser();
 
   const currentDate = new Date();
+  const formattedDate = new Intl.DateTimeFormat("en-GB").format(currentDate);
 
   return (
     <div className="left-container w-full lg:w-1/5 bg-[#323E42] flex justify-center min-h-screen py-10">
       <div className="left-content">
         <h1 className="heading text-[#98FF98] font-bold text-3xl lg:text-4xl mb-3 lg:mb-20">MintyPlan</h1>
+
+        <h2 className="text-[#98FF98] text-lg lg:text-xl xl:text-2xl mb-5 lg:mb-8 xl:mb-10">{formattedDate}</h2>
 
         <nav className="space-y-4 lg:space-y-8 xl:space-y-10 2xl:space-y-12 font-bold">
           {links.map((link) => (
