@@ -120,30 +120,7 @@
 
 ---
 
-## Milestone 6: Financial Summary and Reporting
-
-**Goal**: Provide users with a summary and data visualization tools.
-
-- [ ] **Monthly and Yearly Summary**
-
-  - [ ] Implement API routes to fetch monthly and yearly summaries of income and expenses.
-
-- [ ] **Create Summary Page**
-
-  - [ ] Build a summary page displaying total income and expenses for the selected time period (e.g., monthly, yearly).
-  - [ ] Use charts to show income vs. expenses over time.
-
-- [ ] **Data Visualization**
-
-  - [ ] Integrate Chart.js or a Svelte-compatible chart library to display bar charts or pie charts.
-  - [ ] Visualize data for better understanding of spending patterns and budget usage.
-
-- [ ] **Export Reports**
-  - [ ] Implement a feature to export the financial data in CSV or PDF format.
-
----
-
-## Milestone 7: Finalization and Deployment
+## Milestone 6: Finalization and Deployment
 
 **Goal**: Test, document, and deploy the application.
 
@@ -171,7 +148,6 @@
 3. **Milestone 3**: User authentication.
 4. **Milestone 4**: Income and expense tracking.
 5. **Milestone 5**: Budgeting module.
-6. **Milestone 6**: Financial summary and data visualization.
-7. **Milestone 7**: Finalization, testing, documentation, and deployment.
+6. **Milestone 6**: Finalization, testing, documentation, and deployment.
 
 ---
