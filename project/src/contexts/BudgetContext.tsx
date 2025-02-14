@@ -40,10 +40,6 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await axios.get("/api/data/budget/get-budget", { withCredentials: true });
 
-      const currentDate = new Date();
-      const currentMonth = currentDate.getMonth() + 1;
-      const currentYear = currentDate.getFullYear();
-
       const sortedBudgets: Budget[] = response.data.sort(
         (a: Budget, b: Budget) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
@@ -57,7 +53,7 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const addBudget = async (data: Omit<Budget, "id" | "category" | "percentage" | "createdAt" | "">) => {
+  const addBudget = async (data: Omit<Budget, "id" | "category" | "percentage" | "createdAt">) => {
     try {
       const response = await axios.post("/api/data/budget/create-budget", data, { withCredentials: true });
       setBudgets((prev) => (prev ? [...prev, response.data] : [response.data]));

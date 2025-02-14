@@ -17,6 +17,8 @@ export async function POST(req: NextRequest) {
     // Parse the request body to get budget details
     const { amount, categoryId } = await req.json();
 
+    console.log("Request body:", { amount, categoryId });
+
     // Validate required fields
     if (!amount || !categoryId) {
       return NextResponse.json({ error: "Amount and CategoryID are required" }, { status: 400 });
@@ -32,18 +34,6 @@ export async function POST(req: NextRequest) {
 
     if (!category) {
       return NextResponse.json({ error: "Category not found or does not belong to the user" }, { status: 404 });
-    }
-
-    // Check if a budget already exists for the same user and category
-    const existingBudget = await prisma.budget.findFirst({
-      where: {
-        userId: decoded.id,
-        categoryId: categoryId,
-      },
-    });
-
-    if (existingBudget) {
-      return NextResponse.json({ error: "A budget already exists for this category" }, { status: 400 });
     }
 
     // Create the new budget
