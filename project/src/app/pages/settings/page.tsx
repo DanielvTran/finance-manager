@@ -18,10 +18,10 @@ import Nav from "@/components/Nav";
 
 export default function Settings() {
   const router = useRouter();
-  const { user, fetchUser } = useUser();
+  const { user, fetchUser, loading, error } = useUser();
   const [isEditable, setIsEditable] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [deletePrompt] = useState(user?.email);
+  const [deletePrompt, setDeletePrompt] = useState(user?.email);
   const [deleteUserInput, setDeleteUserInput] = useState("");
 
   // Fetch user data on mount
@@ -85,8 +85,8 @@ export default function Settings() {
                   errors.firstName
                     ? "border-[#E57373] border-2"
                     : isEditable
-                      ? "border-[#E5B973] border-[2px]"
-                      : "border-gray-300"
+                    ? "border-[#E5B973] border-[2px]"
+                    : "border-gray-300"
                 } `}
               >
                 <input
@@ -113,8 +113,8 @@ export default function Settings() {
                   errors.lastName
                     ? "border-[#E57373] border-2"
                     : isEditable
-                      ? "border-[#E5B973] border-[2px]"
-                      : "border-gray-300"
+                    ? "border-[#E5B973] border-[2px]"
+                    : "border-gray-300"
                 } `}
               >
                 <input
@@ -141,8 +141,8 @@ export default function Settings() {
                   errors.email
                     ? "border-[#E57373] border-2"
                     : isEditable
-                      ? "border-[#E5B973] border-[2px]"
-                      : "border-gray-300"
+                    ? "border-[#E5B973] border-[2px]"
+                    : "border-gray-300"
                 } `}
               >
                 <input
@@ -169,8 +169,8 @@ export default function Settings() {
                   errors.password
                     ? "border-[#E57373] border-2"
                     : isEditable
-                      ? "border-[#E5B973] border-[2px]"
-                      : "border-gray-300"
+                    ? "border-[#E5B973] border-[2px]"
+                    : "border-gray-300"
                 } `}
               >
                 <input
@@ -226,8 +226,8 @@ export default function Settings() {
                     ✕
                   </button>
                   <p className="py-4 text-[#ffffff] text-lg">
-                    <p>Please enter this text to delete your account</p>
-                    <span className="text-[#E57373] font-semibold">&apos;{deletePrompt}&apos;</span>
+                    Please enter this text to delete your account{" "}
+                    <span className="text-[#E57373] font-semibold">'{deletePrompt}'</span>
                   </p>
                   <input
                     type="text"

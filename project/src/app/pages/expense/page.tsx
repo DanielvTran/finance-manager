@@ -51,37 +51,25 @@ export default function Expense() {
   }, [expenses, sortOrder]);
 
   useEffect(() => {
-    // If there are no expenses, do nothing
     if (!expenses) return;
 
-    // Apply sorting logic on every change to expenses or sortOrder
-    const sortedExpenses = [...expenses];
-
-    if (sortOrder === "asc") {
-      sortedExpenses.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    } else if (sortOrder === "desc") {
-      sortedExpenses.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-    }
-
-    // Separate expenses into current and older expenses
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
 
-    const currentMonthExpenses = sortedExpenses.filter((expense) => {
+    const currentMonthExpenses = expenses.filter((expense) => {
       const expenseDate = new Date(expense.date);
       return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear;
     });
 
-    const olderExpenses = sortedExpenses.filter((expense) => {
+    const olderExpenses = expenses.filter((expense) => {
       const expenseDate = new Date(expense.date);
       return expenseDate.getMonth() !== currentMonth || expenseDate.getFullYear() !== currentYear;
     });
 
-    // Update state with sorted expenses
     setCurrentMonthExpenses(currentMonthExpenses);
     setOlderExpenses(olderExpenses);
-  }, [expenses, sortOrder]);
+  }, [expenses]);
 
   const {
     register,

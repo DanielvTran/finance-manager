@@ -49,9 +49,7 @@ export async function DELETE(req: NextRequest) {
 
     // Return user data
     return response;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+  } catch (error) {
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 }

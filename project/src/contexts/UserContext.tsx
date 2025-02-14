@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -34,7 +34,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
     try {
       const response = await axios.get("/api/user/get-user", { withCredentials: true });
       setUser(response.data);
-    } catch {
+    } catch (err) {
       setError("Failed to load user");
       setUser(null);
     } finally {
@@ -47,7 +47,7 @@ export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ c
       await axios.post("/api/user/logout-user", { withCredentials: true });
       router.push("/auth/login");
       setUser(null);
-    } catch {
+    } catch (err) {
       setError("Failed to log out");
     } finally {
       setLoading(false);

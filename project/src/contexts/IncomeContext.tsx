@@ -47,7 +47,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
       );
 
       setIncomes(sortedIncomes);
-    } catch {
+    } catch (err) {
       setError("Failed to load incomes");
       setIncomes([]);
     } finally {
@@ -60,7 +60,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await axios.post("/api/data/income/create-income", data, { withCredentials: true });
       setIncomes((prev) => (prev ? [...prev, response.data] : [response.data]));
       await fetchIncomes();
-    } catch {
+    } catch (err) {
       setError("Failed to add income");
     }
   };
@@ -70,7 +70,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
       await axios.delete(`/api/data/income/delete-income/${id}`, { withCredentials: true });
       setIncomes((prev) => prev?.filter((income) => income.id !== id) ?? []);
       await fetchIncomes();
-    } catch {
+    } catch (err) {
       setError("Failed to delete income");
     }
   };
@@ -80,7 +80,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await axios.put(`/api/data/income/update-income/${id}`, data, { withCredentials: true });
       setIncomes((prev) => prev?.map((income) => (income.id === id ? { ...income, ...response.data } : income)) ?? []);
       await fetchIncomes();
-    } catch {
+    } catch (err) {
       setError("Failed to update income");
     }
   };

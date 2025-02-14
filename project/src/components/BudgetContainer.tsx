@@ -21,7 +21,7 @@ interface BudgetProps {
 
 export default function BudgetContainer({ id, category, amount, percentage }: BudgetProps) {
   const { categories } = useCategory();
-  const { budgets, deleteBudget, updateBudget } = useBudget();
+  const { budgets, sortOrder, fetchBudgets, setSortOrder, deleteBudget, updateBudget } = useBudget();
   const [isEditable, setIsEditable] = useState(false);
   const [isRemovable, setIsRemovable] = useState(false);
 

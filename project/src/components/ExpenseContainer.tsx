@@ -24,7 +24,7 @@ interface ExpenseProps {
 
 export default function ExpenseContainer({ id, name, date, amount, category }: ExpenseProps) {
   const { categories } = useCategory();
-  const { expenses, deleteExpense, updateExpense } = useExpense();
+  const { expenses, sortOrder, fetchExpenses, setSortOrder, deleteExpense, updateExpense } = useExpense();
 
   const [isEditable, setIsEditable] = useState(false);
   const [isRemovable, setIsRemovable] = useState(false);

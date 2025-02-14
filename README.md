@@ -38,7 +38,7 @@
 
 ---
 
-## Milestone 2: Database Design and Implementation
+## Milestone 2: Database Design and Implementation (Days 1-2)
 
 **Goal**: Design the database schema in MySQL Workbench and set up the database.
 
@@ -61,7 +61,7 @@
 
 ---
 
-## Milestone 3: User Authentication
+## Milestone 3: User Authentication (Days 3-4)
 
 **Goal**: Implement user authentication and secure access to the application.
 
@@ -81,7 +81,7 @@
 
 ---
 
-## Milestone 4: Income and Expense Tracking
+## Milestone 4: Income and Expense Tracking (Days 5-6)
 
 **Goal**: Implement core features for adding, viewing, editing, and deleting transactions.
 
@@ -101,7 +101,7 @@
 
 ---
 
-## Milestone 5: Budgeting Module
+## Milestone 5: Budgeting Module (Days 7-8)
 
 **Goal**: Implement budget setting and tracking functionality.
 

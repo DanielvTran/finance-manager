@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import CategoryContainer from "@/components/CategoryContainer";
 
 export default function Categories() {
-  const { categories, sortOrder, setSortOrder, fetchCategories, addCategory } = useCategory();
+  const { categories, sortOrder, setSortOrder, fetchCategories, addCategory, updateCategory } = useCategory();
   const [sortedCategories, setSortedCategories] = useState(categories || []);
 
   useEffect(() => {

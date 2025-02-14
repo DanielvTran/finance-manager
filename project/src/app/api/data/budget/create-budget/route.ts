@@ -60,9 +60,8 @@ export async function POST(req: NextRequest) {
 
     // Return the created budget
     return NextResponse.json(newBudget, { status: 201 });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+  } catch (error) {
+    console.error("Error creating budget:", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

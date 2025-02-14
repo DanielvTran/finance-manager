@@ -46,9 +46,7 @@ export async function POST(req: NextRequest) {
 
     // Return the created category
     return NextResponse.json(newCategory, { status: 201 });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+  } catch (error) {
+    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
   }
 }

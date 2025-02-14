@@ -41,9 +41,7 @@ export async function DELETE(req: NextRequest) {
 
     // Return the deleted budget details
     return NextResponse.json({ message: "Budget deleted successfully", budget: deletedBudget }, { status: 200 });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+  } catch (error) {
+    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
   }
 }

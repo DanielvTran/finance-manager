@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import Nav from "@/components/Nav";
 
 export default function Dashboard() {
-  const { user, fetchUser } = useUser();
+  const { user, loading, error, fetchUser, logoutUser } = useUser();
 
   // Fetch user data on mount
   useEffect(() => {

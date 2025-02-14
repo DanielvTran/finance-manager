@@ -24,7 +24,7 @@ interface IncomeProps {
 
 export default function IncomeContainer({ id, name, date, amount, category }: IncomeProps) {
   const { categories } = useCategory();
-  const { incomes, deleteIncome, updateIncome } = useIncome();
+  const { incomes, sortOrder, fetchIncomes, setSortOrder, deleteIncome, updateIncome } = useIncome();
 
   const [isEditable, setIsEditable] = useState(false);
   const [isRemovable, setIsRemovable] = useState(false);

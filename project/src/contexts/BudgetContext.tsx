@@ -40,12 +40,16 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const response = await axios.get("/api/data/budget/get-budget", { withCredentials: true });
 
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentYear = currentDate.getFullYear();
+
       const sortedBudgets: Budget[] = response.data.sort(
         (a: Budget, b: Budget) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
 
       setBudgets(sortedBudgets);
-    } catch {
+    } catch (err) {
       setError("Failed to load budgets");
       setBudgets([]);
     } finally {
@@ -58,7 +62,7 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await axios.post("/api/data/budget/create-budget", data, { withCredentials: true });
       setBudgets((prev) => (prev ? [...prev, response.data] : [response.data]));
       await fetchBudgets();
-    } catch {
+    } catch (err) {
       setError("Failed to add budget");
     }
   };
@@ -68,7 +72,7 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
       await axios.delete(`/api/data/budget/delete-budget/${id}`, { withCredentials: true });
       setBudgets((prev) => prev?.filter((budget) => budget.id !== id) ?? []);
       await fetchBudgets();
-    } catch {
+    } catch (err) {
       setError("Failed to delete budget");
     }
   };
@@ -78,7 +82,7 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await axios.put(`/api/data/budget/update-budget/${id}`, data, { withCredentials: true });
       setBudgets((prev) => prev?.map((budget) => (budget.id === id ? { ...budget, ...response.data } : budget)) ?? []);
       await fetchBudgets();
-    } catch {
+    } catch (err) {
       setError("Failed to update budget");
     }
   };
