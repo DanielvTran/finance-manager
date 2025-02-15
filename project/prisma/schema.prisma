@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Budget {
+  id         Int       @id @default(autoincrement())
+  amount     Float
+  userId     Int
+  categoryId Int?
+  createdAt  DateTime  @default(now())
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  User       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId], map: "Budget_categoryId_fkey")
+  @@index([userId], map: "Budget_userId_fkey")
+}
+
+model Category {
+  id          Int           @id @default(autoincrement())
+  name        String
+  userId      Int
+  Budget      Budget[]
+  User        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Transaction Transaction[]
+
+  @@index([userId], map: "Category_userId_fkey")
+}
+
+model Transaction {
+  id         Int              @id @default(autoincrement())
+  name       String
+  amount     Float
+  date       DateTime         @default(now())
+  type       Transaction_type
+  userId     Int
+  categoryId Int?
+  createdAt  DateTime         @default(now())
+  category   Category?        @relation(fields: [categoryId], references: [id])
+  User       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([categoryId], map: "Transaction_categoryId_fkey")
+  @@index([userId], map: "Transaction_userId_fkey")
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  email       String        @unique
+  password    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  Budget      Budget[]
+  Category    Category[]
+  Transaction Transaction[]
+}
+
+enum Transaction_type {
+  INCOME
+  EXPENSE
+}
