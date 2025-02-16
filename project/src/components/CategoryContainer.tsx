@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useCategory } from "@/contexts/CategoriesContext";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { ICategoriesForm } from "../../lib/types";
@@ -17,9 +16,7 @@ interface CategoryProps {
 }
 
 export default function CategoryContainer({ id, title }: CategoryProps) {
-  const { categories, sortOrder, setSortOrder, deleteCategory, updateCategory } = useCategory();
-  const [isEditable, setIsEditable] = useState(false);
-  const [isRemovable, setIsRemovable] = useState(false);
+  const { categories, deleteCategory, updateCategory } = useCategory();
 
   const {
     register,
@@ -36,9 +33,6 @@ export default function CategoryContainer({ id, title }: CategoryProps) {
   });
 
   const handleEditClick = () => {
-    setIsEditable((prev) => !prev);
-    setIsRemovable(false); // Ensure only one state is active
-
     const modal = document.getElementById("update_categories_modal") as HTMLDialogElement | null;
     if (modal) {
       modal.showModal();
@@ -46,9 +40,6 @@ export default function CategoryContainer({ id, title }: CategoryProps) {
   };
 
   const handleDeleteClick = async () => {
-    setIsRemovable((prev) => !prev);
-    setIsEditable(false); // Ensure only one state is active
-
     try {
       const response = await deleteCategory(id);
       console.log("Deleted category successfully:", response);

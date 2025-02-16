@@ -48,6 +48,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setIncomes(sortedIncomes);
     } catch (err) {
+      console.error(err);
       setError("Failed to load incomes");
       setIncomes([]);
     } finally {
@@ -61,6 +62,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setIncomes((prev) => (prev ? [...prev, response.data] : [response.data]));
       await fetchIncomes();
     } catch (err) {
+      console.error(err);
       setError("Failed to add income");
     }
   };
@@ -71,6 +73,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setIncomes((prev) => prev?.filter((income) => income.id !== id) ?? []);
       await fetchIncomes();
     } catch (err) {
+      console.error(err);
       setError("Failed to delete income");
     }
   };
@@ -81,6 +84,7 @@ export const IncomeContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setIncomes((prev) => prev?.map((income) => (income.id === id ? { ...income, ...response.data } : income)) ?? []);
       await fetchIncomes();
     } catch (err) {
+      console.error(err);
       setError("Failed to update income");
     }
   };

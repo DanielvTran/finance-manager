@@ -18,10 +18,10 @@ import Nav from "@/components/Nav";
 
 export default function Settings() {
   const router = useRouter();
-  const { user, fetchUser, loading, error } = useUser();
+  const { user, fetchUser } = useUser();
   const [isEditable, setIsEditable] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [deletePrompt, setDeletePrompt] = useState(user?.email);
+  const [deletePrompt] = useState(user?.email);
   const [deleteUserInput, setDeleteUserInput] = useState("");
 
   // Fetch user data on mount
@@ -226,8 +226,8 @@ export default function Settings() {
                     ✕
                   </button>
                   <p className="py-4 text-[#ffffff] text-lg">
-                    Please enter this text to delete your account{" "}
-                    <span className="text-[#E57373] font-semibold">'{deletePrompt}'</span>
+                    Please enter this text to delete your account
+                    <span className="text-[#E57373] font-semibold">&apos;{deletePrompt}&apos;</span>
                   </p>
                   <input
                     type="text"

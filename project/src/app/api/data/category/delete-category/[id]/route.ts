@@ -42,6 +42,7 @@ export async function DELETE(req: NextRequest) {
     // Return the deleted category details
     return NextResponse.json({ message: "Category deleted successfully", category: deletedCategory }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+    console.error(error);
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

@@ -31,8 +31,6 @@ export default function Budget() {
     fetchCategories();
   }, []);
 
-  console.log("Budgets:", budgets);
-
   useEffect(() => {
     applySorting();
   }, [budgets, sortOrder]);
@@ -77,7 +75,6 @@ export default function Budget() {
   const onSubmitAdd: SubmitHandler<IBudgetForm> = async (data) => {
     try {
       const response = await addBudget(data);
-      console.log("Budgets after add:", budgets);
 
       reset({
         amount: undefined,
@@ -93,8 +90,6 @@ export default function Budget() {
       console.error("Update error:", error);
     }
   };
-
-  console.log("Sorted Budgets:", sortedBudgets);
 
   return (
     <div className="welcome-container bg-base-200 min-h-screen flex flex-col lg:flex-row relative overflow-hidden">

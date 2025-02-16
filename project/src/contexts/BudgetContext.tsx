@@ -46,6 +46,7 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
       setBudgets(sortedBudgets);
     } catch (err) {
+      console.error(err);
       setError("Failed to load budgets");
       setBudgets([]);
     } finally {
@@ -59,6 +60,7 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setBudgets((prev) => (prev ? [...prev, response.data] : [response.data]));
       await fetchBudgets();
     } catch (err) {
+      console.error(err);
       setError("Failed to add budget");
     }
   };
@@ -69,6 +71,7 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setBudgets((prev) => prev?.filter((budget) => budget.id !== id) ?? []);
       await fetchBudgets();
     } catch (err) {
+      console.error(err);
       setError("Failed to delete budget");
     }
   };
@@ -79,6 +82,7 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
       setBudgets((prev) => prev?.map((budget) => (budget.id === id ? { ...budget, ...response.data } : budget)) ?? []);
       await fetchBudgets();
     } catch (err) {
+      console.error(err);
       setError("Failed to update budget");
     }
   };

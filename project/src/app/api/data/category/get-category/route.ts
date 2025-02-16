@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
     // Return categories data
     return NextResponse.json(categories, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+    console.error(error);
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

@@ -41,8 +41,6 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Category ID is required" }, { status: 400 });
     }
 
-    console.log("Request body:", { name, amount, date, categoryId });
-
     // Find the income to ensure it exists and belongs to the authenticated user
     const existingIncome = await prisma.transaction.findFirst({
       where: {
@@ -70,6 +68,7 @@ export async function PUT(req: NextRequest) {
     // Return the created income
     return NextResponse.json(updatedIncome, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+    console.error(error);
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

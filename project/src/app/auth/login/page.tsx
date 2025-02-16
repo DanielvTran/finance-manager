@@ -32,8 +32,13 @@ export default function Login() {
       console.log("Login successful:", response.data);
       router.push("/dashboard");
     } catch (error) {
-      console.error("Login error:", error);
-      setErrorMessage("Incorrect credentials");
+      if (axios.isAxiosError(error) && error.response) {
+        console.error("Signup error:", error);
+        setErrorMessage(error.response.data.error);
+      } else {
+        console.error("Signup error:", error);
+        setErrorMessage("Network error or unknown issue occurred.");
+      }
     }
   };
 
@@ -47,12 +52,7 @@ export default function Login() {
       <div className="left-container w-full lg:w-2/5 bg-[#323E42] flex items-center justify-center min-h-screen">
         <div className="left-content p-6 md:p-10 lg:p-12">
           <h1 className="heading text-[#98FF98] font-bold text-4xl lg:text-5xl mb-4 lg:mb-10">LOGIN</h1>
-          <p>joshwong@gmail.com</p>
-          <p>danieltran@gmail.com</p>
-          <p> jacksib@gmail.com</p>
-          <p> kim@gmail.com</p>
-          <p>c3aRc?H4CQ9Yxq#T</p>
-          <p>fjdkslF(9</p>
+
           <form onSubmit={handleSubmit(onSubmit)} className="bg-[#323E42] space-y-4 rounded-lg mb-5">
             <input
               {...register("email")}

@@ -11,7 +11,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 // Types
-import { TransactionType, Category } from "@prisma/client";
+import { Transaction_type, Category } from "@prisma/client";
 
 // Components
 import Nav from "@/components/Nav";
@@ -27,7 +27,7 @@ interface Expense {
   name: string;
   amount: number;
   date: Date;
-  type: TransactionType;
+  type: Transaction_type;
   categoryId: number;
   category: Category;
 }

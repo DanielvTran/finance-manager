@@ -31,11 +31,17 @@ export default function Signup() {
   const onSubmit: SubmitHandler<IUserSignupForm> = async (data) => {
     try {
       const response = await axios.post("/api/auth/signup", data);
+
       console.log("Signup successful:", response.data);
       router.push("/dashboard");
     } catch (error) {
-      console.error("Signup error:", error);
-      setErrorMessage("Incorrect credentials");
+      if (axios.isAxiosError(error) && error.response) {
+        console.error("Signup error:", error);
+        setErrorMessage(error.response.data.error);
+      } else {
+        console.error("Signup error:", error);
+        setErrorMessage("Network error or unknown issue occurred.");
+      }
     }
   };
 

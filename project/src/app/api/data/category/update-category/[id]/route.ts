@@ -52,6 +52,7 @@ export async function PUT(req: NextRequest) {
     // Return the created category
     return NextResponse.json(updatedCategory, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+    console.error(error);
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

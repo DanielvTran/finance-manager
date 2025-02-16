@@ -42,7 +42,15 @@ export async function GET(req: NextRequest) {
 
     // Return categories data
     return NextResponse.json(incomes, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ error: "Invalid token or server error" }, { status: 401 });
+  } catch (error: unknown) {
+    console.error(error);
+
+    if (error instanceof Error) {
+      console.error(error);
+      return NextResponse.json({ error: error }, { status: 500 });
+    }
+
+    console.error("An unknown error occurred", error);
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
   }
 }

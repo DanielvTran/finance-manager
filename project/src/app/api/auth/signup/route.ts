@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const validation = signupUserSchema.safeParse(body);
 
     if (!validation.success) {
-      return NextResponse.json(validation.error.errors, { status: 400 });
+      return NextResponse.json({ error: validation.error.errors }, { status: 400 });
     }
 
     // Check for existing users
@@ -72,7 +72,12 @@ export async function POST(req: NextRequest) {
     });
 
     return response;
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error: unknown) {
+    console.error(error);
+
+    if (error instanceof Error) {
+      console.error(error);
+      return NextResponse.json({ error: error }, { status: 500 });
+    }
   }
 }

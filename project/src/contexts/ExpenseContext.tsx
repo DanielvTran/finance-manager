@@ -43,6 +43,7 @@ export const ExpenseContextProvider: React.FC<{ children: React.ReactNode }> = (
       const response = await axios.get("/api/data/expense/get-expense", { withCredentials: true });
       setExpenses(response.data.sort((a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name)));
     } catch (err) {
+      console.error(err);
       setError("Failed to load expenses");
       setExpenses([]);
     } finally {
@@ -56,6 +57,7 @@ export const ExpenseContextProvider: React.FC<{ children: React.ReactNode }> = (
       setExpenses((prev) => (prev ? [...prev, response.data] : [response.data]));
       await fetchExpenses();
     } catch (err) {
+      console.error(err);
       setError("Failed to add expense");
     }
   };
@@ -66,6 +68,7 @@ export const ExpenseContextProvider: React.FC<{ children: React.ReactNode }> = (
       setExpenses((prev) => prev?.filter((expense) => expense.id !== id) ?? []);
       await fetchExpenses();
     } catch (err) {
+      console.error(err);
       setError("Failed to delete expense");
     }
   };
@@ -78,6 +81,7 @@ export const ExpenseContextProvider: React.FC<{ children: React.ReactNode }> = (
       );
       await fetchExpenses();
     } catch (err) {
+      console.error(err);
       setError("Failed to update expense");
     }
   };

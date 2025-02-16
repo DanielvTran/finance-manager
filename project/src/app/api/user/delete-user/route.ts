@@ -27,8 +27,6 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    console.log("User found:", user);
-
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
@@ -39,8 +37,6 @@ export async function DELETE(req: NextRequest) {
       select: { id: true, email: true, firstName: true, lastName: true },
     });
 
-    console.log("Deleted user:", deletedUser);
-
     // Expire the token
     const response = NextResponse.json({ message: "User deleted successfully", deletedUser }, { status: 200 });
 
@@ -50,6 +46,7 @@ export async function DELETE(req: NextRequest) {
     // Return user data
     return response;
   } catch (error) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    console.error(error);
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

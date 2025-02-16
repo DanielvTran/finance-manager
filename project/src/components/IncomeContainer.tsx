@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { incomeSchema } from "../../lib/validationSchema";
@@ -24,10 +23,7 @@ interface IncomeProps {
 
 export default function IncomeContainer({ id, name, date, amount, category }: IncomeProps) {
   const { categories } = useCategory();
-  const { incomes, sortOrder, fetchIncomes, setSortOrder, deleteIncome, updateIncome } = useIncome();
-
-  const [isEditable, setIsEditable] = useState(false);
-  const [isRemovable, setIsRemovable] = useState(false);
+  const { incomes, deleteIncome, updateIncome } = useIncome();
 
   const {
     register,
@@ -46,9 +42,6 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
   });
 
   const handleEditClick = () => {
-    setIsEditable((prev) => !prev);
-    setIsRemovable(false);
-
     const modal = document.getElementById(`update_incomes_modal_${id}`) as HTMLDialogElement | null;
     if (modal) {
       modal.showModal();
@@ -56,9 +49,6 @@ export default function IncomeContainer({ id, name, date, amount, category }: In
   };
 
   const handleDeleteClick = async () => {
-    setIsRemovable((prev) => !prev);
-    setIsEditable(false);
-
     try {
       const response = await deleteIncome(id);
       console.log("Deleted income successfully:", response);

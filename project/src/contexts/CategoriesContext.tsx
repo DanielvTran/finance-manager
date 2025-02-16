@@ -35,6 +35,7 @@ export const CategoryContextProvider: React.FC<{ children: React.ReactNode }> = 
       const response = await axios.get("/api/data/category/get-category", { withCredentials: true });
       setCategories(response.data.sort((a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name)));
     } catch (err) {
+      console.error(err);
       setError("Failed to load categories");
       setCategories([]);
     } finally {
@@ -48,6 +49,7 @@ export const CategoryContextProvider: React.FC<{ children: React.ReactNode }> = 
       const response = await axios.post("/api/data/category/create-category", data, { withCredentials: true });
       setCategories((prev) => (prev ? [...prev, response.data] : [response.data]));
     } catch (err) {
+      console.error(err);
       setError("Failed to add category");
     }
   };
@@ -57,6 +59,7 @@ export const CategoryContextProvider: React.FC<{ children: React.ReactNode }> = 
       await axios.delete(`/api/data/category/delete-category/${id}`, { withCredentials: true });
       setCategories((prev) => prev?.filter((category) => category.id !== id) ?? []);
     } catch (err) {
+      console.error(err);
       setError("Failed to delete category");
     }
   };
@@ -68,6 +71,7 @@ export const CategoryContextProvider: React.FC<{ children: React.ReactNode }> = 
         (prev) => prev?.map((category) => (category.id === id ? { ...category, ...response.data } : category)) ?? []
       );
     } catch (err) {
+      console.error(err);
       setError("Failed to update category");
     }
   };

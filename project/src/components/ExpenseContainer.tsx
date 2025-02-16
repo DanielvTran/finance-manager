@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { expenseSchema } from "../../lib/validationSchema";
@@ -24,10 +23,7 @@ interface ExpenseProps {
 
 export default function ExpenseContainer({ id, name, date, amount, category }: ExpenseProps) {
   const { categories } = useCategory();
-  const { expenses, sortOrder, fetchExpenses, setSortOrder, deleteExpense, updateExpense } = useExpense();
-
-  const [isEditable, setIsEditable] = useState(false);
-  const [isRemovable, setIsRemovable] = useState(false);
+  const { expenses, deleteExpense, updateExpense } = useExpense();
 
   const {
     register,
@@ -46,9 +42,6 @@ export default function ExpenseContainer({ id, name, date, amount, category }: E
   });
 
   const handleEditClick = () => {
-    setIsEditable((prev) => !prev);
-    setIsRemovable(false);
-
     const modal = document.getElementById(`update_expenses_modal_${id}`) as HTMLDialogElement | null;
     if (modal) {
       modal.showModal();
@@ -56,9 +49,6 @@ export default function ExpenseContainer({ id, name, date, amount, category }: E
   };
 
   const handleDeleteClick = async () => {
-    setIsRemovable((prev) => !prev);
-    setIsEditable(false);
-
     try {
       const response = await deleteExpense(id);
       console.log("Deleted expense successfully:", response);

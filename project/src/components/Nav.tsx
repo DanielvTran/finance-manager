@@ -6,6 +6,7 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { usePathname } from "next/navigation";
 import { useUser } from "@/contexts/UserContext";
 import { links } from "../../lib";
+import { format } from "date-fns";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -18,6 +19,8 @@ export default function Nav() {
     <div className="left-container w-full lg:w-1/5 bg-[#323E42] flex justify-center min-h-screen py-10">
       <div className="left-content">
         <h1 className="heading text-[#98FF98] font-bold text-3xl lg:text-4xl mb-3 lg:mb-20">MintyPlan</h1>
+
+        <p className="date text-[#98FF98] mb-10 text-2xl">{format(new Date(currentDate), "dd/MM/yyyy")}</p>
 
         <nav className="space-y-4 lg:space-y-8 xl:space-y-10 2xl:space-y-12 font-bold">
           {links.map((link) => (

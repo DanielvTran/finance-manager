@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Server error or invalid token" }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

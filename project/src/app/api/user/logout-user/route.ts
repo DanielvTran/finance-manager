@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../../../../lib/prisma";
 import jwt from "jsonwebtoken";
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     // Get the token from cookies
     const token = req.cookies.get("accessToken")?.value;
@@ -50,6 +50,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
     return response;
   } catch (error) {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    console.error(error);
+    return NextResponse.json({ error: error }, { status: 500 });
   }
 }

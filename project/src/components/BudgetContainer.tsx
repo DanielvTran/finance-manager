@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useCategory } from "@/contexts/CategoriesContext";
 import { useBudget } from "@/contexts/BudgetContext";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -21,9 +20,7 @@ interface BudgetProps {
 
 export default function BudgetContainer({ id, category, amount, percentage }: BudgetProps) {
   const { categories } = useCategory();
-  const { budgets, sortOrder, fetchBudgets, setSortOrder, deleteBudget, updateBudget } = useBudget();
-  const [isEditable, setIsEditable] = useState(false);
-  const [isRemovable, setIsRemovable] = useState(false);
+  const { budgets, deleteBudget, updateBudget } = useBudget();
 
   const {
     register,
@@ -39,9 +36,6 @@ export default function BudgetContainer({ id, category, amount, percentage }: Bu
   });
 
   const handleEditClick = () => {
-    setIsEditable((prev) => !prev);
-    setIsRemovable(false);
-
     const modal = document.getElementById("update_budgets_modal") as HTMLDialogElement | null;
     if (modal) {
       modal.showModal();
@@ -49,9 +43,6 @@ export default function BudgetContainer({ id, category, amount, percentage }: Bu
   };
 
   const handleDeleteClick = async () => {
-    setIsRemovable((prev) => !prev);
-    setIsEditable(false);
-
     try {
       const response = await deleteBudget(id);
       console.log("Deleted budget successfully:", response);
@@ -88,7 +79,7 @@ export default function BudgetContainer({ id, category, amount, percentage }: Bu
         {/* Edit Icon */}
         <FontAwesomeIcon
           icon={faEllipsis}
-          className="cursor-pointer transition-colors hover:text-[#E5B973]"
+          className="transition-colors hover:text-[#E5B973] isEditable cursor-pointer"
           onMouseEnter={(e) => {
             e.currentTarget.closest(".budget-container")?.classList.add("hover-edit");
           }}
@@ -100,7 +91,7 @@ export default function BudgetContainer({ id, category, amount, percentage }: Bu
         {/* Trash/Delete Icon */}
         <FontAwesomeIcon
           icon={faTrash}
-          className="cursor-pointer transition-colors hover:text-[#E57373] hover:animate-tilt"
+          className="transition-colors hover:text-[#E57373] hover:animate-tilt isEditable cursor-pointer"
           onMouseEnter={(e) => {
             e.currentTarget.closest(".budget-container")?.classList.add("hover-delete");
           }}
