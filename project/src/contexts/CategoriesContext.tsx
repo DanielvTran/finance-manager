@@ -29,10 +29,12 @@ export const CategoryContextProvider: React.FC<{ children: React.ReactNode }> = 
   const [error, setError] = useState<string | null>(null);
 
   const fetchCategories = async () => {
-    setLoading(true);
-    setError(null);
     try {
+      setLoading(true);
+      setError(null);
+
       const response = await axios.get("/api/data/category/get-category", { withCredentials: true });
+
       setCategories(response.data.sort((a: { name: string }, b: { name: string }) => a.name.localeCompare(b.name)));
     } catch (err) {
       console.error(err);

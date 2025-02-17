@@ -35,9 +35,10 @@ export const BudgetContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // TO-DO: Documentation multi line comments (Doc)
   const fetchBudgets = async () => {
-    setLoading(true);
-    setError(null);
     try {
+      setLoading(true);
+      setError(null);
+
       const response = await axios.get("/api/data/budget/get-budget", { withCredentials: true });
 
       const sortedBudgets: Budget[] = response.data.sort(

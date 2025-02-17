@@ -19,10 +19,12 @@ export default function Categories() {
   const { categories, sortOrder, setSortOrder, fetchCategories, addCategory } = useCategory();
   const [sortedCategories, setSortedCategories] = useState(categories || []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchCategories();
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     applySorting();
   }, [categories, sortOrder]);

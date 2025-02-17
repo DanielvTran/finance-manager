@@ -26,11 +26,13 @@ export default function Budget() {
   const [sortedBudgets, setSortedBudgets] = useState(budgets || []);
   const [availableCategories, setAvailableCategories] = useState<Category[]>();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchBudgets();
     fetchCategories();
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     applySorting();
   }, [budgets, sortOrder]);

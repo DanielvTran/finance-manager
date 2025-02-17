@@ -11,6 +11,7 @@ export default function Dashboard() {
   const { user, fetchUser } = useUser();
 
   // Fetch user data on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchUser();
   }, []);
