@@ -14,12 +14,24 @@ export async function GET(req: NextRequest) {
     // Verify the token to extract user ID
     const decoded = jwt.verify(token, process.env.JWT_SECRET_ACCESS as string) as { id: number };
 
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth(); // 0-based index
+    const currentYear = currentDate.getFullYear();
+
+    // Get start and end of the current month
+    const startDate = new Date(currentYear, currentMonth, 1, 0, 0, 0, 0);
+    const endDate = new Date(currentYear, currentMonth + 1, 1, 0, 0, 0, 0);
+
     // Fetch all transactions specific to expense where category id matches and fetch the amount total values of the expense by category
     const expenses = await prisma.transaction.groupBy({
       by: ["categoryId"],
       where: {
         userId: decoded.id,
         type: "EXPENSE",
+        date: {
+          gte: startDate,
+          lt: endDate,
+        },
       },
       _sum: {
         amount: true, // Get total spent per category
