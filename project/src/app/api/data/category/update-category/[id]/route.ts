@@ -53,6 +53,6 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json(updatedCategory, { status: 201 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json({ error: "An unexpected error occurred. Please try again later." }, { status: 500 });
   }
 }

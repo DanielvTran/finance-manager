@@ -33,6 +33,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(categories, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json({ error: "An unexpected error occurred. Please try again later." }, { status: 500 });
   }
 }

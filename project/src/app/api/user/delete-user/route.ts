@@ -7,8 +7,6 @@ export async function DELETE(req: NextRequest) {
     // Get the token from cookies
     const token = req.cookies.get("accessToken")?.value;
 
-    console.log("Access Token:", token);
-
     if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

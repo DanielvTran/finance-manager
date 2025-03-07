@@ -43,6 +43,6 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ message: "Category deleted successfully", category: deletedCategory }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json({ error: "An unexpected error occurred. Please try again later." }, { status: 500 });
   }
 }

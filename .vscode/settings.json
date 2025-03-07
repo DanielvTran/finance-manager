@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["hovertilt"]
+  "cSpell.words": ["hovertilt"],
+  "postman.settings.dotenv-detection-notification-visibility": false
 }
